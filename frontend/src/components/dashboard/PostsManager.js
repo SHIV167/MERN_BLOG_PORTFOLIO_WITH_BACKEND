@@ -50,8 +50,6 @@ const quillModules = {
 };
 import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 
-// All imports are now at the top as required by eslint import/first rule
-
 const PostsManager = ({ posts, onChange }) => {
   const [formData, setFormData] = useState({
     title: '',

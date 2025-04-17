@@ -7,6 +7,20 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+.image-container {
+    height: 350px;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 8px;
+    display: block;
+}
+.image-container img, .image-container .chakra-image {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    display: block;
+}
+
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
         monospace;

@@ -1,6 +1,22 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { createPost } from "../features/posts/postsSlice";
 import ReactQuill from 'react-quill';
 import '../components/dashboard/quill.css';
+
+
+import {
+  Box,
+  Container,
+  Heading,
+  FormControl,
+  FormLabel,
+  Input,
+  Button,
+  VStack,
+  useToast,
+} from "@chakra-ui/react";
 
 const quillModules = {
   toolbar: {
@@ -31,21 +47,8 @@ const quillModules = {
     }
   }
 };
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { createPost } from "../features/posts/postsSlice";
-import {
-  Box,
-  Container,
-  Heading,
-  FormControl,
-  FormLabel,
-  Input,
-  Button,
-  VStack,
-  useToast,
-} from "@chakra-ui/react";
-// All imports are now at the top as required by eslint import/first rule
+
+
 
 function CreatePost() {
   const [formData, setFormData] = useState({

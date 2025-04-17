@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Heading,
@@ -16,15 +17,21 @@ import {
   Link as ChakraLink,
   AspectRatio,
 } from "@chakra-ui/react";
-import { useEffect } from "react";
+// useEffect and useState are imported below in a single line; remove this duplicate import.
 import { useDispatch, useSelector } from "react-redux";
 import {
-  FaGithub,
   FaExternalLinkAlt,
   FaCode,
   FaLaptopCode,
   FaYoutube,
+  FaHtml5,
+  FaCss3Alt,
+  FaJs,
+  FaReact,
+  FaPhp,
+  FaNodeJs,
 } from "react-icons/fa";
+import { SiRedux, SiMongodb } from "react-icons/si";
 import { getSkills } from "../features/skills/skillsSlice";
 import { getFeaturedProjects } from "../features/projects/projectsSlice";
 import { getFeaturedVideos } from "../features/youtube/youtubeSlice";
@@ -37,6 +44,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 const MotionBox = motion(Box);
+const MotionSvg = motion.svg;
 
 function stripHtml(html) {
   if (!html) return '';
@@ -45,6 +53,86 @@ function stripHtml(html) {
   tmp.innerHTML = text;
   return (tmp.textContent || tmp.innerText || '').replace(/\s+/g, ' ').trim();
 }
+
+// Circular animated tech icons for hero banner
+const techIcons = [
+  { icon: FaHtml5, color: '#E44D26', label: 'HTML5' },
+  { icon: FaCss3Alt, color: '#1572B6', label: 'CSS3' },
+  { icon: FaJs, color: '#F7DF1E', label: 'JavaScript' },
+  { icon: FaReact, color: '#61DAFB', label: 'React' },
+  { icon: SiRedux, color: '#764ABC', label: 'Redux' },
+  { icon: FaPhp, color: '#777BB4', label: 'PHP' },
+  { icon: FaNodeJs, color: '#339933', label: 'Node.js' },
+  { icon: SiMongodb, color: '#47A248', label: 'MongoDB' },
+];
+
+
+
+const CircleTechIcons = () => {
+  const radius = 170; // px
+  const iconSize = 54; // px
+  const center = radius + iconSize / 2;
+  const [pos, setPos] = useState({ x: 50, y: 50 });
+
+  // Move to a new random position every 5 seconds
+  useEffect(() => {
+    const moveInterval = setInterval(() => {
+      setPos({
+        x: 10 + Math.random() * 80, // percent (10% to 90%)
+        y: 10 + Math.random() * 80, // percent (10% to 90%)
+      });
+    }, 5000);
+    return () => clearInterval(moveInterval);
+  }, []);
+
+  return (
+    <motion.div
+      style={{
+        position: 'absolute',
+        width: `${2 * (radius + iconSize)}px`,
+        height: `${2 * (radius + iconSize)}px`,
+        left: `${pos.x}%`,
+        top: `${pos.y}%`,
+        transform: 'translate(-50%, -50%)',
+        zIndex: 1,
+        pointerEvents: 'none',
+      }}
+      animate={{ rotate: 360, left: `${pos.x}%`, top: `${pos.y}%` }}
+      transition={{ repeat: Infinity, duration: 36, ease: 'linear', left: { duration: 2 }, top: { duration: 2 } }}
+    >
+      {techIcons.map((tech, i) => {
+        const angle = (2 * Math.PI * i) / techIcons.length;
+        const x = center + radius * Math.cos(angle) - iconSize / 2;
+        const y = center + radius * Math.sin(angle) - iconSize / 2;
+        const Icon = tech.icon;
+        return (
+          <span
+            key={tech.label}
+            style={{
+              position: 'absolute',
+              left: x,
+              top: y,
+              color: tech.color,
+              fontSize: `${iconSize}px`,
+              background: 'white',
+              borderRadius: '50%',
+              boxShadow: '0 4px 24px rgba(0,0,0,0.10)',
+              padding: 6,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              border: `2px solid ${tech.color}`,
+              transition: 'transform 0.2s',
+            }}
+            aria-label={tech.label}
+          >
+            <Icon />
+          </span>
+        );
+      })}
+    </motion.div>
+  );
+};
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -59,9 +147,6 @@ const Home = () => {
   );
   const textColor = useColorModeValue("gray.800", "white");
   const buttonColorScheme = useColorModeValue("purple", "blue");
-  const sectionBg = useColorModeValue("white", "gray.800");
-  const postBg = useColorModeValue("white", "gray.800");
-  const postTextColor = useColorModeValue("gray.600", "gray.400");
 
   useEffect(() => {
     dispatch(getSkills());
@@ -107,6 +192,86 @@ const Home = () => {
     },
   };
 
+  // --- Animated SVG Shapes ---
+  const animatedShapes = [
+    {
+      type: 'triangle',
+      initial: { x: -60, y: 30, rotate: 0, scale: 1 },
+      animate: { x: [0, 60, -30, 0], y: [0, -40, 60, 0], rotate: [0, 120, 240, 360], scale: [1, 1.2, 0.8, 1] },
+      style: { position: 'absolute', top: '10%', left: '5%', zIndex: 1 },
+      color: '#B794F4',
+      size: 48,
+      duration: 18,
+      delay: 0
+    },
+    {
+      type: 'square',
+      initial: { x: 0, y: 0, rotate: 0, scale: 1 },
+      animate: { x: [0, -80, 40, 0], y: [0, 60, -50, 0], rotate: [0, 90, 180, 360], scale: [1, 1.15, 0.85, 1] },
+      style: { position: 'absolute', top: '45%', left: '80%', zIndex: 1 },
+      color: '#63B3ED',
+      size: 38,
+      duration: 16,
+      delay: 1
+    },
+    {
+      type: 'star',
+      initial: { x: 0, y: 0, rotate: 0, scale: 1 },
+      animate: { x: [0, 70, -60, 0], y: [0, -30, 50, 0], rotate: [0, 180, 360, 0], scale: [1, 1.25, 0.9, 1] },
+      style: { position: 'absolute', top: '75%', left: '12%', zIndex: 1 },
+      color: '#F6E05E',
+      size: 42,
+      duration: 20,
+      delay: 0.5
+    },
+    {
+      type: 'bubble',
+      initial: { x: 0, y: 0, scale: 1 },
+      animate: { x: [0, 40, -30, 0], y: [0, -60, 40, 0], scale: [1, 1.3, 0.7, 1] },
+      style: { position: 'absolute', top: '60%', left: '60%', zIndex: 1 },
+      color: '#68D391',
+      size: 60,
+      duration: 22,
+      delay: 0.8
+    },
+    {
+      type: 'bubble',
+      initial: { x: 0, y: 0, scale: 1 },
+      animate: { x: [0, -30, 20, 0], y: [0, 40, -50, 0], scale: [1, 1.2, 0.8, 1] },
+      style: { position: 'absolute', top: '20%', left: '60%', zIndex: 1 },
+      color: '#F687B3',
+      size: 32,
+      duration: 14,
+      delay: 1.2
+    },
+  ];
+
+  // Helper to render SVG shapes
+  const renderShape = ({ type, color, size }) => {
+    switch (type) {
+      case 'triangle':
+        return (
+          <polygon points={`${size / 2},0 0,${size} ${size},${size}`} fill={color} />
+        );
+      case 'square':
+        return <rect width={size} height={size} fill={color} rx={size * 0.2} />;
+      case 'star':
+        return (
+          <polygon
+            points={
+              `${size / 2},0 ${size * 0.6},${size * 0.38} ${size},${size * 0.38} ${size * 0.68},${size * 0.62} ${size * 0.8},${size} ${size / 2},${size * 0.78} ${size * 0.2},${size} ${size * 0.32},${size * 0.62} 0,${size * 0.38} ${size * 0.4},${size * 0.38}`
+            }
+            fill={color}
+          />
+        );
+      case 'bubble':
+      default:
+        return <circle cx={size / 2} cy={size / 2} r={size / 2} fill={color} fillOpacity={0.23} />;
+    }
+  };
+
+  // --- END Animated SVG Shapes ---
+
   return (
     <Box>
       {/* Hero Section */}
@@ -116,6 +281,7 @@ const Home = () => {
         position="relative"
         overflow="hidden"
       >
+        <CircleTechIcons />
         <MotionBox
           position="absolute"
           top={0}
@@ -125,6 +291,9 @@ const Home = () => {
           variants={backgroundVariants}
           animate="animate"
         />
+        {/* Lottie Animations (Modern) */}
+
+
 
         {/* Floating Code Symbols */}
         <MotionBox
@@ -151,6 +320,60 @@ const Home = () => {
         >
           <FaLaptopCode />
         </MotionBox>
+        <MotionBox
+          position="absolute"
+          variants={codeAnimation}
+          initial="initial"
+          animate="animate"
+          fontSize="20rem"
+          color="whiteAlpha.100"
+          top="60%"
+          left="20%"
+        >
+          <FaLaptopCode />
+        </MotionBox>
+        <MotionBox
+          position="absolute"
+          variants={codeAnimation}
+          initial="initial"
+          animate="animate"
+          fontSize="10rem"
+          color="whiteAlpha.100"
+          bottom="20%"
+          right="40%"
+        >
+          <FaCode />
+        </MotionBox>
+
+        {/* --- Animated SVG Shapes --- */}
+        {animatedShapes.map((shape, idx) => (
+          <MotionSvg
+            key={idx}
+            width={shape.size}
+            height={shape.size}
+            style={shape.style}
+            initial={shape.initial}
+            animate={shape.animate}
+            transition={{
+              duration: shape.duration,
+              repeat: Infinity,
+              repeatType: "loop",
+              delay: shape.delay,
+              ease: "easeInOut"
+            }}
+            whileHover={{ scale: 1.3, rotate: 25 }}
+            whileTap={{ scale: 0.9, rotate: -20 }}
+          >
+            {renderShape(shape)}
+            {/* Optional: add filter for glow/blur */}
+            {shape.type === 'bubble' && (
+              <filter id={`blur${idx}`}>
+                <feGaussianBlur stdDeviation="4" />
+              </filter>
+            )}
+          </MotionSvg>
+        ))}
+        {/* --- END Animated SVG Shapes --- */}
 
         <Container maxW="container.xl" position="relative">
           <Stack
@@ -160,24 +383,6 @@ const Home = () => {
             py={{ base: 20, md: 36 }}
           >
             <MotionBox
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <Heading
-                as="h1"
-                size="2xl"
-                color={textColor}
-                mb={4}
-                fontWeight="bold"
-              >
-                Welcome to My Portfolio
-              </Heading>
-            </MotionBox>
-            <MotionBox
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
             >
               <Text fontSize="xl" color={textColor} mb={8}>
                 I'm a Full Stack Developer specializing in
@@ -409,13 +614,10 @@ const Home = () => {
                     boxShadow: '2xl',
                   }}
                 >
-                  <Box h="140px" w="100%" overflow="hidden">
+                  <Box className="image-container">
                     <Image
                       src={post.image ? `${process.env.REACT_APP_BACKEND_URL}${post.image}` : "/post-placeholder.jpg"}
                       alt={post.title}
-                      w="100%"
-                      h="100%"
-                      objectFit="cover"
                     />
                   </Box>
                   <Box flex={1} display="flex" flexDirection="column" justifyContent="space-between" p={6} pt={4}>
@@ -461,114 +663,6 @@ const Home = () => {
       </Box>
 
 
-    </Box>
-  );
-};
-
-const SkillCard = ({ title, skills }) => {
-  return (
-    <Box
-      bg={useColorModeValue("white", "gray.800")}
-      p={6}
-      rounded="lg"
-      boxShadow="lg"
-    >
-      <VStack align="start" spacing={4} width="100%">
-        <Heading size="md">{title}</Heading>
-        <VStack spacing={4} width="100%">
-          {skills.map((skill) => (
-            <Box key={skill._id} width="100%">
-              <HStack justify="space-between" mb={2}>
-                <Text>{skill.name}</Text>
-                <Text>{skill.proficiency}%</Text>
-              </HStack>
-              <Progress
-                value={skill.proficiency}
-                colorScheme="blue"
-                size="sm"
-                rounded="full"
-              />
-            </Box>
-          ))}
-        </VStack>
-      </VStack>
-    </Box>
-  );
-};
-
-const ProjectCard = ({
-  title,
-  description,
-  image,
-  tags,
-  demoLink,
-  githubLink,
-}) => {
-  return (
-    <Box
-      bg={useColorModeValue("white", "gray.800")}
-      rounded="2xl"
-      boxShadow="lg"
-      borderWidth="1.5px"
-      borderColor={useColorModeValue('gray.200', 'gray.700')}
-      overflow="hidden"
-      transition="all 0.2s"
-      _hover={{
-        boxShadow: '2xl',
-        transform: 'translateY(-8px)',
-        borderColor: useColorModeValue('blue.400', 'blue.300'),
-      }}
-      mb={6}
-    >
-      <Image
-        src={image || "/project-placeholder.jpg"}
-        alt={title}
-        h={200}
-        w="full"
-        objectFit="cover"
-      />
-      <Box p={6} pt={4}>
-        <VStack align="start" spacing={3}>
-          <Heading size="md">{title}</Heading>
-          <Text color={useColorModeValue("gray.600", "gray.400")}>
-            {description}
-          </Text>
-          <Stack direction="row" wrap="wrap" spacing={2}>
-            {tags &&
-              tags.map((tag) => (
-                <Tag key={tag} colorScheme="blue">
-                  {tag}
-                </Tag>
-              ))}
-          </Stack>
-          <HStack spacing={4}>
-            {demoLink && (
-              <ChakraLink href={demoLink} isExternal>
-                <Button
-                  leftIcon={<FaExternalLinkAlt />}
-                  size="sm"
-                  colorScheme="blue"
-                  variant="outline"
-                >
-                  Demo
-                </Button>
-              </ChakraLink>
-            )}
-            {githubLink && (
-              <ChakraLink href={githubLink} isExternal>
-                <Button
-                  leftIcon={<FaGithub />}
-                  size="sm"
-                  colorScheme="gray"
-                  variant="outline"
-                >
-                  Code
-                </Button>
-              </ChakraLink>
-            )}
-          </HStack>
-        </VStack>
-      </Box>
     </Box>
   );
 };

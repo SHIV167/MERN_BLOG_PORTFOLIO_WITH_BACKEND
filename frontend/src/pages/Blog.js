@@ -9,9 +9,7 @@ import {
   Text,
   SimpleGrid,
   Image,
-  Stack,
   HStack,
-  useColorModeValue,
   Button,
 } from "@chakra-ui/react";
 
@@ -28,8 +26,7 @@ function stripHtml(html) {
 function Blog() {
   const dispatch = useDispatch();
   const { posts = [], isLoading, isError, message } = useSelector((state) => state.posts || { posts: [] });
-  const bgColor = useColorModeValue("white", "gray.900");
-  const headingColor = useColorModeValue("gray.700", "white");
+
 
   useEffect(() => {
     dispatch(getPosts());
@@ -101,13 +98,10 @@ function Blog() {
                   boxShadow: '2xl',
                 }}
               >
-                <Box h="180px" w="100%" overflow="hidden">
+                <Box className="image-container">
                   <Image
                     src={post.image ? `${process.env.REACT_APP_BACKEND_URL}${post.image}` : "/post-placeholder.jpg"}
                     alt={post.title}
-                    w="100%"
-                    h="100%"
-                    objectFit="cover"
                   />
                 </Box>
                 <Box flex={1} display="flex" flexDirection="column" justifyContent="space-between" p={6} pt={4}>

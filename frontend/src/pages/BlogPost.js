@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { getPost } from "../features/posts/postsSlice";
 import {
@@ -8,14 +8,9 @@ import {
   Heading,
   Text,
   Image,
-  Stack,
   SimpleGrid,
   HStack,
-  VStack,
-  Tag,
-  IconButton,
   Button,
-  useColorModeValue,
   Link as ChakraLink,
 } from "@chakra-ui/react";
 import { FaArrowLeft, FaCalendarAlt, FaClock, FaFacebook, FaTwitter, FaLinkedin, FaLink } from "react-icons/fa";
@@ -32,7 +27,7 @@ function stripHtml(html) {
 function BlogPost() {
   const { slug } = useParams();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+
   const { post, isLoading, posts } = useSelector((state) => state.posts);
   const bgColor = "white";
   const headingColor = "#231942";
@@ -121,13 +116,10 @@ function BlogPost() {
           mt={{ base: -20, md: -32 }}
         >
           {post.image && (
-            <Box h="180px" w="100%" rounded="lg" overflow="hidden" mb={6}>
+            <Box className="image-container" mb={6}>
               <Image
                 src={`${process.env.REACT_APP_BACKEND_URL}${post.image}`}
                 alt={post.title}
-                w="100%"
-                h="100%"
-                objectFit="cover"
               />
             </Box>
           )}
@@ -185,15 +177,10 @@ function BlogPost() {
                 flexDirection="column"
                 justifyContent="space-between"
               >
-                <Box mb={4}>
+                <Box className="image-container" mb={3}>
                   <Image
                     src={article.image ? `${process.env.REACT_APP_BACKEND_URL}${article.image}` : "/post-placeholder.jpg"}
                     alt={article.title}
-                    w="100%"
-                    h="120px"
-                    objectFit="cover"
-                    rounded="md"
-                    mb={3}
                   />
                   <Heading size="md" mb={2} color={headingColor}>
                     {article.title}

@@ -18,12 +18,13 @@ import {
   Tag,
   TagLabel,
   TagCloseButton,
+  Spinner,
 } from "@chakra-ui/react";
 
 function EditProject() {
   const { id } = useParams();
   const { projects } = useSelector((state) => state.projects);
-  const project = projects.find((p) => p._id === id);
+  const projectFromRedux = projects.find((p) => p._id === id);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -35,6 +36,8 @@ function EditProject() {
     featured: false,
   });
   const [tagInput, setTagInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [project, setProject] = useState(projectFromRedux || null);
 
   const { title, description, image, tags, demoLink, githubLink, featured } =
     formData;
@@ -44,18 +47,40 @@ function EditProject() {
   const toast = useToast();
 
   useEffect(() => {
-    if (project) {
+    if (!projectFromRedux && id) {
+      setLoading(true);
+      fetch(`/api/projects/${id}`)
+        .then((res) => {
+          if (!res.ok) throw new Error("Not found");
+          return res.json();
+        })
+        .then((data) => {
+          setProject(data);
+          setFormData({
+            title: data.title || "",
+            description: data.description || "",
+            image: data.image || "",
+            tags: data.tags || [],
+            demoLink: data.demoLink || "",
+            githubLink: data.githubLink || "",
+            featured: data.featured || false,
+          });
+        })
+        .catch(() => setProject(null))
+        .finally(() => setLoading(false));
+    } else if (projectFromRedux) {
+      setProject(projectFromRedux);
       setFormData({
-        title: project.title,
-        description: project.description,
-        image: project.image,
-        tags: project.tags,
-        demoLink: project.demoLink,
-        githubLink: project.githubLink,
-        featured: project.featured,
+        title: projectFromRedux.title,
+        description: projectFromRedux.description,
+        image: projectFromRedux.image,
+        tags: projectFromRedux.tags,
+        demoLink: projectFromRedux.demoLink,
+        githubLink: projectFromRedux.githubLink,
+        featured: projectFromRedux.featured,
       });
     }
-  }, [project]);
+  }, [projectFromRedux, id]);
 
   const onChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -111,6 +136,14 @@ function EditProject() {
       });
   };
 
+  if (loading) {
+    return (
+      <Container maxW={"7xl"} py={12}>
+        <Heading>Loading...</Heading>
+        <Spinner />
+      </Container>
+    );
+  }
   if (!project) {
     return (
       <Container maxW={"7xl"} py={12}>
