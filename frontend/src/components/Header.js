@@ -16,7 +16,6 @@ import {
   MenuList,
   MenuItem,
   Container,
-  Link as ChakraLink,
 } from "@chakra-ui/react";
 import {
   MoonIcon,
@@ -25,13 +24,9 @@ import {
 } from "@chakra-ui/icons";
 import {
   FaGithub,
-  FaTwitter,
   FaUser,
-  FaWhatsapp,
   FaLinkedinIn,
   FaYoutube,
-  FaThLarge,
-  FaSignOutAlt,
 } from "react-icons/fa";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
