@@ -97,9 +97,7 @@ export default function Header() {
                 <RouterLink to="/">
                   <Button variant="ghost">Home</Button>
                 </RouterLink>
-                <RouterLink to="/projects">
-                  <Button variant="ghost">Projects</Button>
-                </RouterLink>
+                
                 <RouterLink to="/blog">
                   <Button variant="ghost">Blog</Button>
                 </RouterLink>
@@ -264,11 +262,7 @@ export default function Header() {
                   Home
                 </Button>
               </RouterLink>
-              <RouterLink to="/projects" onClick={onClose}>
-                <Button w="full" variant="ghost" justifyContent="flex-start">
-                  Projects
-                </Button>
-              </RouterLink>
+              
               <RouterLink to="/blog" onClick={onClose}>
                 <Button w="full" variant="ghost" justifyContent="flex-start">
                   Blog

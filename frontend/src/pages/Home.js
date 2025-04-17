@@ -338,43 +338,21 @@ const Home = () => {
           <Text color="whiteAlpha.800" mb={10} textAlign="center" fontSize="lg">
             Check out my latest tutorials and tech discussions
           </Text>
-          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
-            {videos?.slice(0, 3).map((video) => (
-              <Box
-                key={video._id}
-                bg="whiteAlpha.200"
-                borderRadius="xl"
-                boxShadow="lg"
-                overflow="hidden"
-                display="flex"
-                flexDirection="column"
-                minH="320px"
-              >
-                <AspectRatio ratio={16 / 9}>
-                  <iframe
-                    title={video.title}
-                    src={`https://www.youtube.com/embed/${video.videoId}`}
-                    allowFullScreen
-                  />
-                </AspectRatio>
-                <Box p={6} flex={1} display="flex" flexDirection="column" justifyContent="space-between">
-                  <Box>
-                    <Heading fontSize="lg" color="white" fontWeight={700} mb={1}>
-                      {video.title}
-                    </Heading>
-                    <Text color="whiteAlpha.900" fontSize="md" mb={3}>{video.description}</Text>
-                    <Tag colorScheme="purple" fontWeight="bold">{video.category}</Tag>
-                  </Box>
-                </Box>
-              </Box>
-            ))}
-          </SimpleGrid>
-          {/* Carousel dots (static for demo) */}
-          <Box display="flex" justifyContent="center" alignItems="center" mt={6} mb={2}>
-            <Box w={2} h={2} bg="white" borderRadius="full" mx={1} opacity={1}></Box>
-            <Box w={2} h={2} bg="whiteAlpha.700" borderRadius="full" mx={1} opacity={0.7}></Box>
-            <Box w={2} h={2} bg="whiteAlpha.700" borderRadius="full" mx={1} opacity={0.7}></Box>
-          </Box>
+          <Box px={{ base: 0, md: 10 }}>
+  <SliderSection
+    items={videos || []}
+    slidesToShow={3}
+    renderItem={(video) => (
+      <VideoCard
+        key={video._id}
+        title={video.title}
+        description={video.description}
+        videoId={video.videoId}
+        category={video.category}
+      />
+    )}
+  />
+</Box>
           <Box textAlign="center" mt={2}>
             <Button
               as={ChakraLink}

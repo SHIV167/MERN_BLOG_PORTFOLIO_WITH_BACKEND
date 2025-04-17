@@ -19,6 +19,7 @@ import CreateVideo from "./pages/CreateVideo";
 import EditVideo from "./pages/EditVideo";
 import Contact from "./pages/Contact";
 import AdminRoute from "./components/AdminRoute";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -107,6 +108,7 @@ function App() {
                   </AdminRoute>
                 }
               />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </Box>
           <Footer />
