@@ -7,7 +7,7 @@ import Blog from "./pages/Blog";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
-import PostDetail from "./pages/PostDetail";
+import BlogPost from "./pages/BlogPost";
 import EditPost from "./pages/EditPost";
 import CreatePost from "./pages/CreatePost";
 import CreateSkill from "./pages/CreateSkill";
@@ -29,7 +29,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/blog" element={<Blog />} />
-              <Route path="/blog/:slug" element={<PostDetail />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/contact" element={<Contact />} />

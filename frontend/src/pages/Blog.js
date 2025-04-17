@@ -57,7 +57,12 @@ function Blog() {
                 mx={-6}
                 mb={6}
                 pos={"relative"}>
-                <Image src={post.image} layout={"fill"} alt={post.title} />
+                <Image
+                  src={`${process.env.REACT_APP_BACKEND_URL}${post.image}`}
+                  layout={"fill"}
+                  alt={post.title}
+                  objectFit="cover"
+                />
               </Box>
             )}
             <Stack>

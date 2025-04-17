@@ -29,7 +29,7 @@ import {
 import { getSkills } from "../features/skills/skillsSlice";
 import { getFeaturedProjects } from "../features/projects/projectsSlice";
 import { getFeaturedVideos } from "../features/youtube/youtubeSlice";
-import { getPosts } from '../features/dashboard/dashboardSlice';
+import { getPosts } from '../features/posts/postsSlice';
 import { motion } from "framer-motion";
 import Typewriter from "typewriter-effect";
 
@@ -40,7 +40,7 @@ const Home = () => {
   const { skills } = useSelector((state) => state.skills || { skills: [] });
   const { projects } = useSelector((state) => state.projects || { projects: [] });
   const { videos } = useSelector((state) => state.youtube || { videos: [] });
-  const { posts } = useSelector((state) => state.dashboard || { posts: [] });
+  const { posts } = useSelector((state) => state.posts || { posts: [] });
 
   const postBg = useColorModeValue("white", "gray.800");
   const postTextColor = useColorModeValue("gray.600", "gray.400");
@@ -298,6 +298,60 @@ const Home = () => {
               to="/blog"
               size="lg"
               colorScheme={buttonColorScheme}
+            >
+              View All Posts
+            </Button>
+          </Box>
+        </Container>
+      </Box>
+
+      {/* Latest Blog Posts Section */}
+      <Box bg={useColorModeValue("gray.50", "gray.900")} py={20}>
+        <Container maxW="container.xl">
+          <Heading as="h2" size="xl" mb={12} textAlign="center">
+            Latest Blog Posts
+          </Heading>
+          {posts && posts.length > 0 ? (
+            <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
+              {posts.slice(0, 3).map((post) => (
+                <Box
+                  key={post._id}
+                  bg={postBg}
+                  p={6}
+                  rounded="lg"
+                  boxShadow="lg"
+                  _hover={{ transform: 'translateY(-5px)', transition: 'transform 0.2s' }}
+                >
+                  <VStack align="start" spacing={4}>
+                    <Heading size="md">{post.title}</Heading>
+                    <Text color={postTextColor} noOfLines={3}>
+                      {post.content}
+                    </Text>
+                    <Button
+                      as={Link}
+                      to={`/blog/${post.slug}`}
+                      colorScheme={buttonColorScheme}
+                      variant="outline"
+                      size="sm"
+                    >
+                      Read More
+                    </Button>
+                  </VStack>
+                </Box>
+              ))}
+            </SimpleGrid>
+          ) : (
+            <Text textAlign="center" color={postTextColor}>
+              No blog posts available yet.
+            </Text>
+          )}
+          <Box textAlign="center" mt={8}>
+            <Button
+              as={Link}
+              to="/blog"
+              size="lg"
+              colorScheme={buttonColorScheme}
+              variant="solid"
             >
               View All Posts
             </Button>
