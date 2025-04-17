@@ -24,11 +24,25 @@ import {
   HamburgerIcon,
   ChevronDownIcon,
 } from "@chakra-ui/icons";
-import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
+import { FaGithub, FaLinkedin, FaTwitter, FaUser } from "react-icons/fa";
 import { Link as RouterLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout, reset } from "../features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
+
+// Inject animated border keyframes for Resume button
+if (typeof document !== 'undefined' && !document.getElementById('resume-animate-style')) {
+  const style = document.createElement('style');
+  style.id = 'resume-animate-style';
+  style.innerHTML = `
+    @keyframes gradient-border {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+  `;
+  document.head.appendChild(style);
+}
 
 export default function Header() {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -92,6 +106,60 @@ export default function Header() {
                 <RouterLink to="/contact">
                   <Button variant="ghost">Contact</Button>
                 </RouterLink>
+                <ChakraLink
+                  href="https://shivjha.online/wp-content/uploads/2025/02/SHIV_KUMAR_JHA_DEC_2024_LATEST.pdf"
+                  isExternal
+                  _hover={{ textDecoration: 'none' }}
+                >
+                  <Button
+                    px={6}
+                    position="relative"
+                    className="animated-resume-btn"
+                    bg="white"
+                    color="purple.600"
+                    fontWeight="bold"
+                    borderRadius="md"
+                    boxShadow="md"
+                    borderWidth="2px"
+                    borderStyle="solid"
+                    borderColor="transparent"
+                    _before={{
+                      content: '""',
+                      position: 'absolute',
+                      top: '-4px',
+                      left: '-4px',
+                      right: '-4px',
+                      bottom: '-4px',
+                      borderRadius: 'md',
+                      zIndex: 0,
+                      background: 'linear-gradient(90deg, #a259f7, #f953c6, #43e97b 100%)',
+                      backgroundSize: '200% 200%',
+                      animation: 'gradient-border 2s linear infinite',
+                    }}
+                    _after={{
+                      content: '""',
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      borderRadius: 'md',
+                      zIndex: 1,
+                      background: 'white',
+                    }}
+                    sx={{
+                      position: 'relative',
+                      zIndex: 2,
+                      overflow: 'hidden',
+                      fontSize: 'md',
+                      transition: 'box-shadow 0.2s',
+                    }}
+                  >
+                    <Box as="span" position="relative" zIndex={3}>
+                      Resume
+                    </Box>
+                  </Button>
+                </ChakraLink>
               </HStack>
             </HStack>
 
@@ -152,15 +220,15 @@ export default function Header() {
                     </MenuList>
                   </Menu>
                 ) : (
-                  <RouterLink to="/resume">
-                    <Button
-                      size="sm"
-                      colorScheme="purple"
-                      fontWeight="normal"
-                      px={6}>
-                      Resume
-                    </Button>
-                  </RouterLink>
+                  <IconButton
+                    as={RouterLink}
+                    to="/login"
+                    aria-label="Login"
+                    icon={<FaUser />}
+                    size="md"
+                    colorScheme="purple"
+                    variant="ghost"
+                  />
                 )}
               </Stack>
             </Flex>
@@ -211,6 +279,57 @@ export default function Header() {
                   Contact
                 </Button>
               </RouterLink>
+              <ChakraLink
+                href="https://shivjha.online/wp-content/uploads/2025/02/SHIV_KUMAR_JHA_DEC_2024_LATEST.pdf"
+                isExternal
+                _hover={{ textDecoration: 'none' }}
+                w="full"
+              >
+                <Button
+                  w="full"
+                  variant="ghost"
+                  px={6}
+                  position="relative"
+                  className="animated-resume-btn"
+                  justifyContent="flex-start"
+                  _before={{
+                    content: '""',
+                    position: 'absolute',
+                    top: '-3px',
+                    left: '-3px',
+                    right: '-3px',
+                    bottom: '-3px',
+                    borderRadius: 'md',
+                    zIndex: 0,
+                    background: 'linear-gradient(90deg, #a259f7, #f953c6, #43e97b 100%)',
+                    backgroundSize: '200% 200%',
+                    animation: 'gradient-border 2s linear infinite',
+                  }}
+                  _after={{
+                    content: '""',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    borderRadius: 'md',
+                    zIndex: 1,
+                    background: 'white',
+                  }}
+                  sx={{
+                    position: 'relative',
+                    zIndex: 2,
+                    background: 'transparent',
+                    color: 'purple.600',
+                    fontWeight: 'bold',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <Box as="span" position="relative" zIndex={3}>
+                    Resume
+                  </Box>
+                </Button>
+              </ChakraLink>
             </Stack>
           </Flex>
         </Box>
