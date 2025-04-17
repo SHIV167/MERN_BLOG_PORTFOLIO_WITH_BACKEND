@@ -365,10 +365,10 @@ const SkillCard = ({ title, skills }) => {
             <Box key={skill._id} width="100%">
               <HStack justify="space-between" mb={2}>
                 <Text>{skill.name}</Text>
-                <Text>{skill.level}%</Text>
+                <Text>{skill.proficiency}%</Text>
               </HStack>
               <Progress
-                value={skill.level}
+                value={skill.proficiency}
                 colorScheme="blue"
                 size="sm"
                 rounded="full"
