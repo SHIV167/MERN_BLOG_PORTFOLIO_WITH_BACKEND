@@ -24,7 +24,7 @@ import {
   HamburgerIcon,
   ChevronDownIcon,
 } from "@chakra-ui/icons";
-import { FaGithub, FaLinkedin, FaTwitter, FaUser } from "react-icons/fa";
+import { FaGithub, FaLinkedin, FaTwitter, FaUser, FaWhatsapp, FaLinkedinIn, FaYoutube } from "react-icons/fa";
 import { Link as RouterLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout, reset } from "../features/auth/authSlice";
@@ -72,7 +72,15 @@ export default function Header() {
         boxShadow="sm">
         <Container maxW="6xl">
           <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
-            <IconButton
+            <HStack spacing={3} alignItems={"center"}>
+              <Button onClick={toggleColorMode} variant="ghost" size="sm" _hover={{}} transition="none">
+                {colorMode === "light" ? <MoonIcon boxSize="2rem" /> : <SunIcon boxSize="2rem" />}
+              </Button>
+              {!user && (
+                <IconButton as={RouterLink} to="/login" aria-label="Login" icon={<FaUser />} bg="purple.500" color="white" borderRadius="full" boxSize="2.25rem" _hover={{}} transition="none" />
+              )}
+            </HStack>
+            <IconButton _hover={{ transform: 'scale(1.18)', color: 'purple.400', boxShadow: '0 4px 20px rgba(162, 89, 247, 0.18)' }} transition="all 0.2s" size="2rem"
               size={"md"}
               icon={<HamburgerIcon />}
               aria-label={"Open Menu"}
@@ -164,70 +172,13 @@ export default function Header() {
             <Flex alignItems={"center"}>
               <Stack direction={"row"} spacing={3} align="center">
                 {/* Social Icons */}
-                <HStack spacing={2} display={{ base: "none", md: "flex" }}>
-                  <ChakraLink href="https://github.com/yourusername" isExternal>
-                    <IconButton
-                      aria-label="GitHub"
-                      icon={<FaGithub />}
-                      size="sm"
-                      variant="ghost"
-                    />
-                  </ChakraLink>
-                  <ChakraLink
-                    href="https://linkedin.com/in/yourusername"
-                    isExternal>
-                    <IconButton
-                      aria-label="LinkedIn"
-                      icon={<FaLinkedin />}
-                      size="sm"
-                      variant="ghost"
-                    />
-                  </ChakraLink>
-                  <ChakraLink
-                    href="https://twitter.com/yourusername"
-                    isExternal>
-                    <IconButton
-                      aria-label="Twitter"
-                      icon={<FaTwitter />}
-                      size="sm"
-                      variant="ghost"
-                    />
-                  </ChakraLink>
+                <HStack spacing={3} display={{ base: "none", md: "flex" }}>
+                  <IconButton as="a" href="https://wa.me/919876543210" aria-label="WhatsApp" icon={<FaWhatsapp />} bg="green.400" color="white" borderRadius="full" boxSize="2.25rem" _hover={{ bg: 'green.500' }} />
+                  <IconButton as="a" href="https://linkedin.com/in/yourusername" aria-label="LinkedIn" icon={<FaLinkedinIn />} bg="blue.700" color="white" borderRadius="full" boxSize="2.25rem" _hover={{ bg: 'blue.800' }} />
+                  <IconButton as="a" href="https://github.com/yourusername" aria-label="GitHub" icon={<FaGithub />} bg="gray.900" color="white" borderRadius="full" boxSize="2.25rem" _hover={{ bg: 'gray.700' }} />
+                  <IconButton as="a" href="https://twitter.com/yourusername" aria-label="Twitter" icon={<FaTwitter />} bg="#1DA1F2" color="white" borderRadius="full" boxSize="2.25rem" _hover={{ bg: '#1A8CD8' }} />
+                  <IconButton as="a" href="https://youtube.com/@yourchannel" aria-label="YouTube" icon={<FaYoutube />} bg="red.500" color="white" borderRadius="full" boxSize="2.25rem" _hover={{ bg: 'red.600' }} />
                 </HStack>
-
-                <Button onClick={toggleColorMode} variant="ghost" size="sm">
-                  {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
-                </Button>
-
-                {user ? (
-                  <Menu>
-                    <MenuButton
-                      as={Button}
-                      rightIcon={<ChevronDownIcon />}
-                      variant="ghost"
-                      size="sm">
-                      {user.name}
-                    </MenuButton>
-                    <MenuList>
-                      {user.isAdmin && (
-                        <MenuItem as={RouterLink} to="/dashboard">
-                          Dashboard
-                        </MenuItem>
-                      )}
-                      <MenuItem onClick={onLogout}>Logout</MenuItem>
-                    </MenuList>
-                  </Menu>
-                ) : (
-                  <IconButton
-                    as={RouterLink}
-                    to="/login"
-                    aria-label="Login"
-                    icon={<FaUser />}
-                    size="md"
-                    colorScheme="purple"
-                    variant="ghost"
-                  />
-                )}
               </Stack>
             </Flex>
           </Flex>
@@ -242,9 +193,28 @@ export default function Header() {
           left="0"
           w="100%"
           h="100vh"
-          bg={mobileBg}
           zIndex={1000}
-          p={4}>
+          p={0}
+          style={{
+            backdropFilter: 'blur(8px)',
+            background: 'rgba(30, 0, 50, 0.3)',
+            transition: 'background 0.3s',
+          }}>
+          <Box
+            position="absolute"
+            left={0}
+            top={0}
+            h="100vh"
+            w={{ base: '80%', sm: '60%', md: '400px' }}
+            bg={mobileBg}
+            boxShadow="2xl"
+            p={4}
+            style={{
+              transform: 'translateX(0)',
+              animation: 'slideInLeft 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
+            }}
+            key="mobile-menu-panel"
+          >
           <Flex direction="column" h="full">
             <Flex justify="space-between" align="center" mb={8}>
               <Text
@@ -326,9 +296,17 @@ export default function Header() {
               </ChakraLink>
             </Stack>
           </Flex>
-        </Box>
-      )}
-
+            </Box>
+          </Box>
+        )}
+      <style>
+        {`
+        @keyframes slideInLeft {
+          from { transform: translateX(-100%); }
+          to { transform: translateX(0); }
+        }
+        `}
+      </style>
       {/* Spacer to prevent content from going under fixed header */}
       <Box h="64px" />
     </>
