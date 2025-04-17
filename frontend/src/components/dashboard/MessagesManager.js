@@ -45,21 +45,11 @@ const MessagesManager = () => {
       const user = JSON.parse(localStorage.getItem('user'));
       const token = user?.token;
       
-      console.log('Auth token:', token); // Debug log
-      if (!token) {
-        toast({
-          title: 'Error',
-          description: 'Authentication required',
-          status: 'error',
-          duration: 3000,
-          isClosable: true,
-        });
-        return;
-      }
-
+      if (!token) throw new Error('No auth token found');
+      
       const res = await axios.get('/api/contact', {
         headers: {
-          'x-auth-token': token
+          Authorization: `Bearer ${token}`
         }
       });
       setMessages(res.data);

@@ -40,13 +40,24 @@ function Dashboard() {
   const fetchAll = async () => {
     setIsLoading(true);
     try {
-      const [postsRes, skillsRes, videosRes, messagesRes] = await Promise.all([
+      const user = JSON.parse(localStorage.getItem('user'));
+      const token = user?.token;
+      
+      const [postsRes, skillsRes, videosRes] = await Promise.all([
         fetch('/api/posts'),
         fetch('/api/skills'),
         fetch('/api/videos'),
-        fetch('/api/contact'),
       ]);
-      const messagesData = await messagesRes.json();
+      // Fetch messages with auth header
+      let messagesData = [];
+      if (token) {
+        const messagesRes = await fetch('/api/contact', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        messagesData = await messagesRes.json();
+      }
       setPosts(await postsRes.json());
       setSkills(await skillsRes.json());
       setVideos(await videosRes.json());
