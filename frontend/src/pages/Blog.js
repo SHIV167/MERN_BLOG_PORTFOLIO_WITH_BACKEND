@@ -1,6 +1,8 @@
+import React from "react";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getPosts } from "../features/posts/postsSlice";
+import { Link as RouterLink } from "react-router-dom";
 import {
   Box,
   Container,
@@ -10,14 +12,12 @@ import {
   Image,
   Stack,
   useColorModeValue,
-  Link as ChakraLink,
   Button,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
 
 function Blog() {
   const dispatch = useDispatch();
-  const { posts, isLoading } = useSelector((state) => state.posts);
+  const { posts = [], isLoading, isError, message } = useSelector((state) => state.posts || { posts: [] });
   const bgColor = useColorModeValue("white", "gray.900");
   const headingColor = useColorModeValue("gray.700", "white");
 
@@ -29,6 +29,14 @@ function Blog() {
     return (
       <Container maxW={"7xl"} py={12}>
         <Text>Loading...</Text>
+      </Container>
+    );
+  }
+
+  if (isError) {
+    return (
+      <Container maxW={"7xl"} py={12}>
+        <Text color="red.500">{message}</Text>
       </Container>
     );
   }
@@ -59,8 +67,9 @@ function Blog() {
                 pos={"relative"}>
                 <Image
                   src={`${process.env.REACT_APP_BACKEND_URL}${post.image}`}
-                  layout={"fill"}
                   alt={post.title}
+                  w="100%"
+                  h="100%"
                   objectFit="cover"
                 />
               </Box>
@@ -93,7 +102,7 @@ function Blog() {
               </Stack>
             </Stack>
             <Button
-              as={Link}
+              as={RouterLink}
               to={`/blog/${post.slug}`}
               mt={4}
               colorScheme="blue"

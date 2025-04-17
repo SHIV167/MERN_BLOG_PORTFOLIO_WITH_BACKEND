@@ -25,9 +25,7 @@ import {
   ChevronDownIcon,
 } from "@chakra-ui/icons";
 import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
-// Add this import at the top with other imports
 import { Link as RouterLink } from "react-router-dom";
-
 import { useSelector, useDispatch } from "react-redux";
 import { logout, reset } from "../features/auth/authSlice";
 import { useNavigate } from "react-router-dom";

@@ -23,14 +23,12 @@ function Dashboard() {
   const [videos, setVideos] = useState([]);
   const [messages, setMessages] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Replace with your auth state logic if needed
     // For now, try to fetch user from localStorage or similar
     const storedUser = JSON.parse(localStorage.getItem('user'));
-    setUser(storedUser);
     if (!storedUser) {
       navigate('/login');
     } else {
@@ -40,7 +38,7 @@ function Dashboard() {
   }, []);
 
   const fetchAll = async () => {
-    setLoading(true);
+    setIsLoading(true);
     try {
       const [postsRes, skillsRes, videosRes, messagesRes] = await Promise.all([
         fetch('/api/posts'),
@@ -57,7 +55,7 @@ function Dashboard() {
     } catch (err) {
       // Optionally handle error
     }
-    setLoading(false);
+    setIsLoading(false);
   };
 
   return (

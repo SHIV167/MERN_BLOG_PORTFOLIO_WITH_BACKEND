@@ -1,19 +1,16 @@
 import React from 'react';
 import {
   Container,
-  Box,
-  Heading,
-  Text,
   FormControl,
   FormLabel,
   Input,
   Textarea,
   Button,
-  Alert,
-  AlertIcon,
   VStack,
+  Text,
   FormErrorMessage,
-  useToast
+  useToast,
+  Heading
 } from '@chakra-ui/react';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';

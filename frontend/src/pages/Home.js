@@ -18,7 +18,6 @@ import {
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import {
   FaGithub,
   FaExternalLinkAlt,
@@ -29,7 +28,8 @@ import {
 import { getSkills } from "../features/skills/skillsSlice";
 import { getFeaturedProjects } from "../features/projects/projectsSlice";
 import { getFeaturedVideos } from "../features/youtube/youtubeSlice";
-import { getPosts } from '../features/posts/postsSlice';
+import { getPosts } from "../features/posts/postsSlice";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import Typewriter from "typewriter-effect";
 
@@ -40,10 +40,8 @@ const Home = () => {
   const { skills } = useSelector((state) => state.skills || { skills: [] });
   const { projects } = useSelector((state) => state.projects || { projects: [] });
   const { videos } = useSelector((state) => state.youtube || { videos: [] });
-  const { posts } = useSelector((state) => state.posts || { posts: [] });
+  const { posts = [] } = useSelector((state) => state.posts || { posts: [] });
 
-  const postBg = useColorModeValue("white", "gray.800");
-  const postTextColor = useColorModeValue("gray.600", "gray.400");
   const bgGradient = useColorModeValue(
     "linear(to-r, blue.100, purple.100)",
     "linear(to-r, blue.900, purple.900)"
@@ -51,6 +49,8 @@ const Home = () => {
   const textColor = useColorModeValue("gray.800", "white");
   const buttonColorScheme = useColorModeValue("purple", "blue");
   const sectionBg = useColorModeValue("white", "gray.800");
+  const postBg = useColorModeValue("white", "gray.800");
+  const postTextColor = useColorModeValue("gray.600", "gray.400");
 
   useEffect(() => {
     dispatch(getSkills());
@@ -278,11 +278,20 @@ const Home = () => {
                 boxShadow="lg"
               >
                 <VStack align="start" spacing={4}>
+                  {/* Show blog post image if available, else fallback */}
+                  <Image
+                    src={post.image || "/post-placeholder.jpg"}
+                    alt={post.title}
+                    h={180}
+                    w="full"
+                    objectFit="cover"
+                    rounded="md"
+                  />
                   <Heading size="md">{post.title}</Heading>
-                  <Text color={postTextColor}>{post.excerpt}</Text>
+                  <Text color={postTextColor}>{post.excerpt || post.content?.slice(0, 100) + "..."}</Text>
                   <Button
                     as={Link}
-                    to={`/blog/${post._id}`}
+                    to={`/blog/${post.slug || post._id}`}
                     variant="link"
                     colorScheme="blue"
                   >
@@ -305,59 +314,6 @@ const Home = () => {
         </Container>
       </Box>
 
-      {/* Latest Blog Posts Section */}
-      <Box bg={useColorModeValue("gray.50", "gray.900")} py={20}>
-        <Container maxW="container.xl">
-          <Heading as="h2" size="xl" mb={12} textAlign="center">
-            Latest Blog Posts
-          </Heading>
-          {posts && posts.length > 0 ? (
-            <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
-              {posts.slice(0, 3).map((post) => (
-                <Box
-                  key={post._id}
-                  bg={postBg}
-                  p={6}
-                  rounded="lg"
-                  boxShadow="lg"
-                  _hover={{ transform: 'translateY(-5px)', transition: 'transform 0.2s' }}
-                >
-                  <VStack align="start" spacing={4}>
-                    <Heading size="md">{post.title}</Heading>
-                    <Text color={postTextColor} noOfLines={3}>
-                      {post.content}
-                    </Text>
-                    <Button
-                      as={Link}
-                      to={`/blog/${post.slug}`}
-                      colorScheme={buttonColorScheme}
-                      variant="outline"
-                      size="sm"
-                    >
-                      Read More
-                    </Button>
-                  </VStack>
-                </Box>
-              ))}
-            </SimpleGrid>
-          ) : (
-            <Text textAlign="center" color={postTextColor}>
-              No blog posts available yet.
-            </Text>
-          )}
-          <Box textAlign="center" mt={8}>
-            <Button
-              as={Link}
-              to="/blog"
-              size="lg"
-              colorScheme={buttonColorScheme}
-              variant="solid"
-            >
-              View All Posts
-            </Button>
-          </Box>
-        </Container>
-      </Box>
 
       {/* Videos Section */}
       <Box bg={useColorModeValue("gray.50", "gray.900")} py={20}>
