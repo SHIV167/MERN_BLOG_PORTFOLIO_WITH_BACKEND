@@ -20,10 +20,14 @@ import EditVideo from "./pages/EditVideo";
 import Contact from "./pages/Contact";
 import AdminRoute from "./components/AdminRoute";
 import NotFound from "./pages/NotFound";
+import React from 'react';
+import PopupModal from './components/PopupModal';
 
 function App() {
+  // PopupModal is rendered globally
   return (
     <ChakraProvider>
+      <PopupModal />
       <GlobalFloatButtons />
       <Router>
         <Box minH="100vh" display="flex" flexDirection="column">
@@ -41,11 +45,11 @@ function App() {
 
             <Route path="/projects/create" element={<AdminRoute><CreateProject /></AdminRoute>} />
             <Route path="/projects/edit/:id" element={<AdminRoute><EditProject /></AdminRoute>} />
-            {/* <Route path="/projects/delete/:id" element={<AdminRoute><DeleteProject /></AdminRoute>} /> */}
+            {/* <Route path="/projects/delete/:id" element={<AdminRoute><DeleteProject /></AdminRoute>} */}
 
             <Route path="/videos/create" element={<AdminRoute><CreateVideo /></AdminRoute>} />
             <Route path="/videos/edit/:id" element={<AdminRoute><EditVideo /></AdminRoute>} />
-            {/* <Route path="/videos/delete/:id" element={<AdminRoute><DeleteVideo /></AdminRoute>} /> */}
+            {/* <Route path="/videos/delete/:id" element={<AdminRoute><DeleteVideo /></AdminRoute>} */}
 
             {/* To enable delete pages, uncomment the above and create the components if not present. */}
 

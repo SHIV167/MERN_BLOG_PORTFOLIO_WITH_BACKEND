@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Container,
@@ -7,82 +7,74 @@ import {
   Link,
   useColorModeValue,
   HStack,
+  Spinner
 } from "@chakra-ui/react";
-import { FaGithub, FaLinkedin, FaTwitter, FaInstagram } from "react-icons/fa";
+import * as FaIcons from "react-icons/fa"; // for dynamic icon rendering
 
 const Footer = () => {
+  const [footer, setFooter] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  // Move hooks to top
+  const bgGradient = useColorModeValue(
+    "linear(to-r, purple.100, blue.100)",
+    "linear(to-r, purple.900, blue.900)"
+  );
+  const borderTopColor = useColorModeValue("gray.200", "gray.700");
+
+  useEffect(() => {
+    fetch('/api/footer')
+      .then(res => res.json())
+      .then(data => { setFooter(data); setLoading(false); })
+      .catch(() => { setError(true); setLoading(false); });
+  }, []);
+
+  // Helper: render icon by name
+  const renderIcon = (iconName) => {
+    const IconComp = FaIcons[iconName];
+    return IconComp ? <IconComp size={20} /> : null;
+  };
+
+  if (loading) return <Box py={8} textAlign="center"><Spinner /> Loading footer...</Box>;
+
   return (
     <Box
       as="footer"
-      bgGradient={useColorModeValue(
-        "linear(to-r, purple.100, blue.100)",
-        "linear(to-r, purple.900, blue.900)"
-      )}
+      bgGradient={bgGradient}
       py={8}>
       <Container maxW="container.xl">
-        <Stack
-          direction={{ base: "column", md: "row" }}
-          spacing={{ base: 8, md: 16 }}>
-          <Stack flex={1} spacing={4}>
-            <Text fontSize="lg" fontWeight="bold">
-              Company
-            </Text>
-            <Stack>
-              <Link _hover={{ transform: 'scale(1.18)', color: 'purple.400', boxShadow: '0 4px 20px rgba(162, 89, 247, 0.18)' }} transition="all 0.2s" href="/about">About</Link>
-              <Link _hover={{ transform: 'scale(1.18)', color: 'purple.400', boxShadow: '0 4px 20px rgba(162, 89, 247, 0.18)' }} transition="all 0.2s" href="/blog">Blog</Link>
-              <Link _hover={{ transform: 'scale(1.18)', color: 'purple.400', boxShadow: '0 4px 20px rgba(162, 89, 247, 0.18)' }} transition="all 0.2s" href="/contact">Contact</Link>
-              <Link _hover={{ transform: 'scale(1.18)', color: 'purple.400', boxShadow: '0 4px 20px rgba(162, 89, 247, 0.18)' }} transition="all 0.2s" href="/pricing">Pricing</Link>
-              <Link _hover={{ transform: 'scale(1.18)', color: 'purple.400', boxShadow: '0 4px 20px rgba(162, 89, 247, 0.18)' }} transition="all 0.2s" href="/testimonials">Testimonials</Link>
+        {/* Dynamic Footer Content */}
+        {footer && footer.links && footer.links.length > 0 ? (
+          <Stack direction={{ base: "column", md: "row" }} spacing={{ base: 8, md: 16 }}>
+            <Stack flex={1} spacing={4}>
+              <Text fontSize="lg" fontWeight="bold">Links</Text>
+              <Stack>
+                {footer.links.map((link, idx) => (
+                  <Link key={idx} href={link.url} isExternal={/^https?:/.test(link.url)}>
+                    {link.label || link.url}
+                  </Link>
+                ))}
+              </Stack>
+            </Stack>
+            <Stack flex={1} spacing={4}>
+              <Text fontSize="lg" fontWeight="bold">Social</Text>
+              <HStack>
+                {footer.social && footer.social.map((soc, idx) => (
+                  <Link key={idx} href={soc.url} isExternal>
+                    {renderIcon(soc.icon)}
+                  </Link>
+                ))}
+              </HStack>
+            </Stack>
+            <Stack flex={2} spacing={4} justify="center">
+              <Text>{footer.text}</Text>
             </Stack>
           </Stack>
-
-          <Stack flex={1} spacing={4}>
-            <Text fontSize="lg" fontWeight="bold">
-              Support
-            </Text>
-            <Stack>
-              <Link _hover={{ transform: 'scale(1.18)', color: 'purple.400', boxShadow: '0 4px 20px rgba(162, 89, 247, 0.18)' }} transition="all 0.2s" href="/help">Help Center</Link>
-              <Link _hover={{ transform: 'scale(1.18)', color: 'purple.400', boxShadow: '0 4px 20px rgba(162, 89, 247, 0.18)' }} transition="all 0.2s" href="/terms">Terms of Service</Link>
-              <Link _hover={{ transform: 'scale(1.18)', color: 'purple.400', boxShadow: '0 4px 20px rgba(162, 89, 247, 0.18)' }} transition="all 0.2s" href="/legal">Legal</Link>
-              <Link _hover={{ transform: 'scale(1.18)', color: 'purple.400', boxShadow: '0 4px 20px rgba(162, 89, 247, 0.18)' }} transition="all 0.2s" href="/privacy">Privacy Policy</Link>
-              <Link _hover={{ transform: 'scale(1.18)', color: 'purple.400', boxShadow: '0 4px 20px rgba(162, 89, 247, 0.18)' }} transition="all 0.2s" href="/status">Status</Link>
-            </Stack>
-          </Stack>
-
-          <Stack flex={1} spacing={4}>
-            <Text fontSize="lg" fontWeight="bold">
-              Stay Connected
-            </Text>
-            <Stack>
-              <Link _hover={{ transform: 'scale(1.18)', color: 'purple.400', boxShadow: '0 4px 20px rgba(162, 89, 247, 0.18)' }} transition="all 0.2s" href="https://github.com" isExternal>
-                GitHub
-              </Link>
-              <Link _hover={{ transform: 'scale(1.18)', color: 'purple.400', boxShadow: '0 4px 20px rgba(162, 89, 247, 0.18)' }} transition="all 0.2s" href="https://discord.com" isExternal>
-                Discord
-              </Link>
-              <Link _hover={{ transform: 'scale(1.18)', color: 'purple.400', boxShadow: '0 4px 20px rgba(162, 89, 247, 0.18)' }} transition="all 0.2s" href="https://twitter.com" isExternal>
-                Twitter
-              </Link>
-              <Link _hover={{ transform: 'scale(1.18)', color: 'purple.400', boxShadow: '0 4px 20px rgba(162, 89, 247, 0.18)' }} transition="all 0.2s" href="https://linkedin.com" isExternal>
-                LinkedIn
-              </Link>
-              <Link _hover={{ transform: 'scale(1.18)', color: 'purple.400', boxShadow: '0 4px 20px rgba(162, 89, 247, 0.18)' }} transition="all 0.2s" href="https://instagram.com" isExternal>
-                Instagram
-              </Link>
-            </Stack>
-          </Stack>
-
-          <Stack flex={1} spacing={4}>
-            <Text fontSize="lg" fontWeight="bold">
-              Get in Touch
-            </Text>
-            <Stack>
-              <Text>New Delhi, India</Text>
-              <Link _hover={{ transform: 'scale(1.18)', color: 'purple.400', boxShadow: '0 4px 20px rgba(162, 89, 247, 0.18)' }} transition="all 0.2s" href="mailto:contact@shivjha.dev">contact@shivjha.dev</Link>
-              <Text>+91 (123) 456-7890</Text>
-            </Stack>
-          </Stack>
-        </Stack>
+        ) : (
+          // fallback static content
+          <Text color="gray.500">No footer content found.</Text>
+        )}
 
         <Stack
           direction={{ base: "column", md: "row" }}
@@ -91,22 +83,9 @@ const Footer = () => {
           pt={8}
           mt={8}
           borderTopWidth={1}
-          borderTopColor={useColorModeValue("gray.200", "gray.700")}>
+          borderTopColor={borderTopColor}>
           <Text>© 2024 Shiv Jha. All rights reserved.</Text>
-          <HStack spacing={4}>
-            <Link _hover={{ transform: 'scale(1.18)', color: 'purple.400', boxShadow: '0 4px 20px rgba(162, 89, 247, 0.18)' }} transition="all 0.2s" href="https://github.com" isExternal>
-              <FaGithub size="2rem" size={20} />
-            </Link>
-            <Link _hover={{ transform: 'scale(1.18)', color: 'purple.400', boxShadow: '0 4px 20px rgba(162, 89, 247, 0.18)' }} transition="all 0.2s" href="https://linkedin.com" isExternal>
-              <FaLinkedin size="2rem" size={20} />
-            </Link>
-            <Link _hover={{ transform: 'scale(1.18)', color: 'purple.400', boxShadow: '0 4px 20px rgba(162, 89, 247, 0.18)' }} transition="all 0.2s" href="https://twitter.com" isExternal>
-              <FaTwitter size="2rem" size={20} />
-            </Link>
-            <Link _hover={{ transform: 'scale(1.18)', color: 'purple.400', boxShadow: '0 4px 20px rgba(162, 89, 247, 0.18)' }} transition="all 0.2s" href="https://instagram.com" isExternal>
-              <FaInstagram size="2rem" size={20} />
-            </Link>
-          </HStack>
+          {/* Social icons are now rendered dynamically from backend data above. */}
         </Stack>
       </Container>
     </Box>

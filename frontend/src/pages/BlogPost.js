@@ -19,6 +19,7 @@ import {
   Link as ChakraLink,
 } from "@chakra-ui/react";
 import { FaArrowLeft, FaCalendarAlt, FaClock, FaFacebook, FaTwitter, FaLinkedin, FaLink } from "react-icons/fa";
+import EmojiFeedback from "../components/EmojiFeedback";
 
 function BlogPost() {
   const { slug } = useParams();
@@ -153,6 +154,8 @@ function BlogPost() {
           <Text color="gray.700" fontSize="md" mb={0}>
             {post.content}
           </Text>
+          {/* Emoji Feedback Section */}
+          <EmojiFeedback postId={post._id} />
         </Box>
 
         {/* More Articles Section */}

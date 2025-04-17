@@ -24,6 +24,11 @@ app.use("/api/skills", require("./routes/skillRoutes"));
 app.use("/api/projects", require("./routes/projectRoutes"));
 app.use("/api/videos", require("./routes/youtubeRoutes"));
 app.use("/api/contact", require("./routes/contactRoutes"));
+app.use("/api/header-menu", require("./routes/headerMenu"));
+app.use("/api/footer", require("./routes/footerContent"));
+app.use('/api/feedback', require('./routes/postFeedback'));
+app.use('/api/popup', require('./routes/popup'));
+app.use('/api/upload', require('./routes/upload'));
 
 // Serve uploaded files
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));

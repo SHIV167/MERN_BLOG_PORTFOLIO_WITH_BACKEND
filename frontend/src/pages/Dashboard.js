@@ -20,6 +20,10 @@ import MessagesManager from '../components/dashboard/MessagesManager';
 import AdminDashboardLayout from '../components/dashboard/AdminDashboardLayout';
 import CreateProject from './CreateProject';
 import EditProject from './EditProject';
+import HeaderMenuManager from '../components/dashboard/HeaderMenuManager';
+import FooterManager from '../components/dashboard/FooterManager';
+import FeedbackDashboard from '../components/dashboard/FeedbackDashboard';
+import PopupManager from '../components/dashboard/PopupManager';
 
 import { Link, Routes, Route } from 'react-router-dom';
 
@@ -180,10 +184,14 @@ function Dashboard() {
         <Route path="projects" element={<ProjectsManager projects={projects} onChange={fetchAll} />} />
         <Route path="projects/create" element={<CreateProject onSuccess={fetchAll} />} />
         <Route path="projects/edit/:id" element={<EditProject onSuccess={fetchAll} />} />
+        <Route path="header-menu" element={<HeaderMenuManager />} />
+        <Route path="footer" element={<FooterManager />} />
         <Route path="posts" element={<PostsManager posts={posts} onChange={fetchAll} />} />
         <Route path="skills" element={<SkillsManager skills={skills} onChange={fetchAll} />} />
         <Route path="videos" element={<VideosManager videos={videos} onChange={fetchAll} />} />
         <Route path="messages" element={<MessagesManager messages={messages} onChange={fetchAll} />} />
+        <Route path="feedback" element={<FeedbackDashboard />} />
+        <Route path="popup" element={<PopupManager />} />
       </Routes>
     </AdminDashboardLayout>
   );

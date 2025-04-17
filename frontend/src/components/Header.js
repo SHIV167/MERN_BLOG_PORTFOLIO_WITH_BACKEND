@@ -22,13 +22,13 @@ import {
   MoonIcon,
   SunIcon,
   HamburgerIcon,
-  ChevronDownIcon,
 } from "@chakra-ui/icons";
-import { FaGithub, FaLinkedin, FaTwitter, FaUser, FaWhatsapp, FaLinkedinIn, FaYoutube } from "react-icons/fa";
+import { FaGithub, FaTwitter, FaUser, FaWhatsapp, FaLinkedinIn, FaYoutube, FaThLarge, FaSignOutAlt } from "react-icons/fa";
 import { Link as RouterLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout, reset } from "../features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
 
 // Inject animated border keyframes for Resume button
 if (typeof document !== 'undefined' && !document.getElementById('resume-animate-style')) {
@@ -45,6 +45,15 @@ if (typeof document !== 'undefined' && !document.getElementById('resume-animate-
 }
 
 export default function Header() {
+  const [menuItems, setMenuItems] = useState([]);
+  useEffect(() => {
+    fetch('/api/header-menu')
+      .then(res => res.json())
+      .then(data => {
+        setMenuItems(Array.isArray(data) ? data.filter(item => item.visible).sort((a,b) => a.order - b.order) : []);
+      })
+      .catch(() => setMenuItems([]));
+  }, []);
   const { colorMode, toggleColorMode } = useColorMode();
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
@@ -82,75 +91,82 @@ export default function Header() {
                   SHIV JHA
                 </Text>
               </RouterLink>
-              <HStack
-                as={"nav"}
-                spacing={4}
-                display={{ base: "none", md: "flex" }}>
-                <RouterLink to="/">
-                  <Button variant="ghost">Home</Button>
-                </RouterLink>
-                <RouterLink to="/blog">
-                  <Button variant="ghost">Blog</Button>
-                </RouterLink>
-                <RouterLink to="/contact">
-                  <Button variant="ghost">Contact</Button>
-                </RouterLink>
-                <ChakraLink
-                  href="https://shivjha.online/wp-content/uploads/2025/02/SHIV_KUMAR_JHA_DEC_2024_LATEST.pdf"
-                  isExternal
-                  _hover={{ textDecoration: 'none' }}
+              <nav>
+                {menuItems.length > 0 ? (
+                  menuItems.map(item => (
+                    <RouterLink key={item._id} to={item.url}>
+                      <Button variant="ghost">{item.label}</Button>
+                    </RouterLink>
+                  ))
+                ) : (
+                  <>
+                    <RouterLink to="/">
+                      <Button variant="ghost">Home</Button>
+                    </RouterLink>
+                    <RouterLink to="/blog">
+                      <Button variant="ghost">Blog</Button>
+                    </RouterLink>
+                    <RouterLink to="/contact">
+                      <Button variant="ghost">Contact</Button>
+                    </RouterLink>
+                  </>
+                )}
+              </nav>
+              <ChakraLink
+                href="https://shivjha.online/wp-content/uploads/2025/02/SHIV_KUMAR_JHA_DEC_2024_LATEST.pdf"
+                isExternal
+                _hover={{ textDecoration: 'none' }}
+              >
+                <Button
+                  px={6}
+                  position="relative"
+                  className="animated-resume-btn"
+                  bg="white"
+                  color="purple.600"
+                  fontWeight="bold"
+                  borderRadius="md"
+                  boxShadow="md"
+                  borderWidth="2px"
+                  borderStyle="solid"
+                  borderColor="transparent"
+                  _before={{
+                    content: '""',
+                    position: 'absolute',
+                    top: '-4px',
+                    left: '-4px',
+                    right: '-4px',
+                    bottom: '-4px',
+                    borderRadius: 'md',
+                    zIndex: 0,
+                    background: 'linear-gradient(90deg, #a259f7, #f953c6, #43e97b 100%)',
+                    backgroundSize: '200% 200%',
+                    animation: 'gradient-border 2s linear infinite',
+                  }}
+                  _after={{
+                    content: '""',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    borderRadius: 'md',
+                    zIndex: 1,
+                    background: 'white',
+                  }}
+                  sx={{
+                    position: 'relative',
+                    zIndex: 2,
+                    background: 'transparent',
+                    color: 'purple.600',
+                    fontWeight: 'bold',
+                    overflow: 'hidden',
+                  }}
                 >
-                  <Button
-                    px={6}
-                    position="relative"
-                    className="animated-resume-btn"
-                    bg="white"
-                    color="purple.600"
-                    fontWeight="bold"
-                    borderRadius="md"
-                    boxShadow="md"
-                    borderWidth="2px"
-                    borderStyle="solid"
-                    borderColor="transparent"
-                    _before={{
-                      content: '""',
-                      position: 'absolute',
-                      top: '-4px',
-                      left: '-4px',
-                      right: '-4px',
-                      bottom: '-4px',
-                      borderRadius: 'md',
-                      zIndex: 0,
-                      background: 'linear-gradient(90deg, #a259f7, #f953c6, #43e97b 100%)',
-                      backgroundSize: '200% 200%',
-                      animation: 'gradient-border 2s linear infinite',
-                    }}
-                    _after={{
-                      content: '""',
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      borderRadius: 'md',
-                      zIndex: 1,
-                      background: 'white',
-                    }}
-                    sx={{
-                      position: 'relative',
-                      zIndex: 2,
-                      background: 'transparent',
-                      color: 'purple.600',
-                      fontWeight: 'bold',
-                      overflow: 'hidden',
-                    }}
-                  >
-                    <Box as="span" position="relative" zIndex={3}>
-                      Resume
-                    </Box>
-                  </Button>
-                </ChakraLink>
-              </HStack>
+                  <Box as="span" position="relative" zIndex={3}>
+                    Resume
+                  </Box>
+                </Button>
+              </ChakraLink>
             </HStack>
 
             <HStack spacing={3} alignItems={"center"}>
@@ -172,9 +188,9 @@ export default function Header() {
                   </MenuButton>
                   <MenuList>
                     {user.isAdmin && (
-                      <MenuItem as={RouterLink} to="/dashboard">Dashboard</MenuItem>
+                      <MenuItem icon={<FaThLarge />} onClick={() => navigate('/dashboard')}>Dashboard</MenuItem>
                     )}
-                    <MenuItem onClick={onLogout}>Logout</MenuItem>
+                    <MenuItem icon={<FaSignOutAlt />} onClick={onLogout}>Logout</MenuItem>
                   </MenuList>
                 </Menu>
               ) : (

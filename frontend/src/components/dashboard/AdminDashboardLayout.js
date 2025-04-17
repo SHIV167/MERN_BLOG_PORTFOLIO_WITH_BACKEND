@@ -10,13 +10,21 @@ import {
   Divider,
   Button,
   useColorModeValue,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem
 } from '@chakra-ui/react';
 import { ArrowLeftIcon, ArrowRightIcon } from '@chakra-ui/icons';
-import { FaProjectDiagram, FaRegNewspaper, FaUserCog, FaEnvelopeOpenText, FaYoutube, FaSignOutAlt, FaThLarge } from 'react-icons/fa';
+import { FaProjectDiagram, FaRegNewspaper, FaUserCog, FaEnvelopeOpenText, FaYoutube, FaSignOutAlt, FaThLarge, FaBars, FaRegSmile, FaRegWindowRestore } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
 
 const navLinks = [
   { name: 'Dashboard', icon: FaThLarge, to: '/dashboard' },
+  { name: 'Menu Manager', icon: FaBars, to: '/dashboard/header-menu' },
+  { name: 'Footer Manager', icon: FaRegSmile, to: '/dashboard/footer' },
+  { name: 'Popup Manager', icon: FaRegWindowRestore, to: '/dashboard/popup' },
+  { name: 'Feedback', icon: FaRegSmile, to: '/dashboard/feedback' },
   { name: 'Projects', icon: FaProjectDiagram, to: '/dashboard/projects' },
   { name: 'Blog Posts', icon: FaRegNewspaper, to: '/dashboard/posts' },
   { name: 'Skills', icon: FaUserCog, to: '/dashboard/skills' },
@@ -84,7 +92,20 @@ const AdminDashboardLayout = ({ children, user }) => {
               </Box>
             )}
           </HStack>
-          <Button leftIcon={<FaSignOutAlt />} mt={4} w={collapsed ? 10 : 'full'} colorScheme="whiteAlpha" variant="outline" size="sm" borderRadius="md">
+          <HStack mt={4} w={collapsed ? 10 : 'full'} justifyContent={collapsed ? 'center' : 'flex-start'}>
+            <Menu>
+              <MenuButton as={Button} leftIcon={<Avatar size="sm" name={user?.name} />} colorScheme="whiteAlpha" variant="outline" size="sm" borderRadius="md">
+                {!collapsed && user?.name}
+              </MenuButton>
+              <MenuList>
+                <MenuItem icon={<FaThLarge />} onClick={() => window.location.href = '/dashboard'}>Dashboard</MenuItem>
+              </MenuList>
+            </Menu>
+          </HStack>
+          <Button leftIcon={<FaSignOutAlt />} mt={2} w={collapsed ? 10 : 'full'} colorScheme="red" variant="solid" size="sm" borderRadius="md" onClick={() => {
+            localStorage.removeItem('user');
+            window.location.href = '/login';
+          }}>
             {!collapsed && 'Logout'}
           </Button>
         </Box>
