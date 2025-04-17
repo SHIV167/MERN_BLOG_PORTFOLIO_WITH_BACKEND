@@ -10,17 +10,21 @@ const SliderArrow = (props) => {
       style={{
         ...style,
         display: "block",
-        background: "#2D3748",
-        color: "#fff",
+        background: "rgba(255,255,255,0.8)",
+        color: "#4317b7",
         border: "none",
         borderRadius: "50%",
-        width: 36,
-        height: 36,
-        right: arrowType === 'next' ? -18 : undefined,
-        left: arrowType === 'prev' ? -18 : undefined,
+        width: 40,
+        height: 40,
+        right: arrowType === 'next' ? 16 : undefined,
+        left: arrowType === 'prev' ? 16 : undefined,
+        top: "50%",
+        transform: arrowType === 'prev'
+          ? "translate(-0%, -50%)"
+          : "translate(0%, -50%)",
         zIndex: 2,
-        boxShadow: "0 2px 6px rgba(0,0,0,0.2)",
-        fontSize: 18,
+        boxShadow: "0 4px 8px rgba(0,0,0,0.15)",
+        fontSize: 20,
         cursor: "pointer",
       }}
       aria-label={arrowType === 'next' ? 'Next Slide' : 'Previous Slide'}
@@ -34,6 +38,25 @@ const SliderArrow = (props) => {
 const SliderSection = ({ items, renderItem, slidesToShow = 3, ...props }) => {
   const settings = {
     dots: true,
+    appendDots: dots => (
+      <div>
+        <ul style={{ display: 'flex', justifyContent: 'center', margin: '16px 0', padding: 0 }}>
+          {dots}
+        </ul>
+      </div>
+    ),
+    customPaging: i => (
+      <button style={{
+        width: '10px',
+        height: '10px',
+        borderRadius: '50%',
+        background: 'rgba(255,255,255,0.6)',
+        border: 'none',
+        margin: '0 6px',
+        padding: 0,
+        cursor: 'pointer',
+      }} />
+    ),
     infinite: items.length > slidesToShow,
     speed: 500,
     slidesToShow: slidesToShow,
@@ -60,7 +83,7 @@ const SliderSection = ({ items, renderItem, slidesToShow = 3, ...props }) => {
   return (
     <Slider {...settings} {...props}>
       {items.map((item, idx) => (
-        <div key={item._id || idx} style={{ padding: '0 12px', minWidth: 320 }}>
+        <div key={item._id || idx} style={{ padding: '0 20px', minWidth: 320 }}>
           {renderItem(item)}
         </div>
       ))}

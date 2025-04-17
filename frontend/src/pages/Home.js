@@ -507,7 +507,7 @@ const ProjectCard = ({
       transition="all 0.2s"
       _hover={{
         boxShadow: '2xl',
-        transform: 'translateY(-8px) scale(1.04)',
+        transform: 'translateY(-8px)',
         borderColor: useColorModeValue('blue.400', 'blue.300'),
       }}
       mb={6}
@@ -577,7 +577,7 @@ const VideoCard = ({ title, description, videoId, category }) => {
       transition="all 0.2s"
       _hover={{
         boxShadow: '2xl',
-        transform: 'translateY(-8px) scale(1.04)',
+        transform: 'translateY(-8px)',
         borderColor: useColorModeValue('blue.400', 'blue.300'),
       }}
       mb={6}
