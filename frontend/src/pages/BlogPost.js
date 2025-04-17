@@ -21,6 +21,14 @@ import {
 import { FaArrowLeft, FaCalendarAlt, FaClock, FaFacebook, FaTwitter, FaLinkedin, FaLink } from "react-icons/fa";
 import EmojiFeedback from "../components/EmojiFeedback";
 
+function stripHtml(html) {
+  if (!html) return '';
+  let text = html.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+  const tmp = document.createElement('DIV');
+  tmp.innerHTML = text;
+  return (tmp.textContent || tmp.innerText || '').replace(/\s+/g, ' ').trim();
+}
+
 function BlogPost() {
   const { slug } = useParams();
   const dispatch = useDispatch();
@@ -90,7 +98,7 @@ function BlogPost() {
           pos="absolute"
           top={{ base: 3, md: 6 }}
           left={{ base: 3, md: 8 }}
-          onClick={() => navigate(-1)}
+          as={ChakraLink} href="/blog"
           fontWeight="bold"
           color="gray.100"
           bg="rgba(44,40,81,0.5)"
@@ -139,9 +147,11 @@ function BlogPost() {
             </HStack>
           </HStack>
 
-          <Text color="gray.600" fontSize="lg" mb={4}>
-            {post.excerpt || post.content?.substring(0, 120) + "..."}
-          </Text>
+          {post.excerpt && (
+            <Text color="gray.600" fontSize="lg" mb={4}>
+              {post.excerpt}
+            </Text>
+          )}
 
           <HStack spacing={3} mb={6}>
             <Text color="gray.500" fontWeight="bold">Share:</Text>
@@ -151,9 +161,9 @@ function BlogPost() {
             <ChakraLink href="#" isExternal><FaLink /></ChakraLink>
           </HStack>
 
-          <Text color="gray.700" fontSize="md" mb={0}>
-            {post.content}
-          </Text>
+          <Box color="gray.700" fontSize="md" mb={0}
+            dangerouslySetInnerHTML={{ __html: post.content }}
+          />
           {/* Emoji Feedback Section */}
           <EmojiFeedback postId={post._id} />
         </Box>
@@ -189,7 +199,7 @@ function BlogPost() {
                     {article.title}
                   </Heading>
                   <Text color="gray.600" mb={2}>
-                    {article.excerpt || article.content?.substring(0, 80) + "..."}
+                    {article.excerpt ? stripHtml(article.excerpt).substring(0, 80) : (article.content ? stripHtml(article.content).substring(0, 80) + '...' : '')}
                   </Text>
                 </Box>
                 <HStack color="gray.500" fontSize="sm">

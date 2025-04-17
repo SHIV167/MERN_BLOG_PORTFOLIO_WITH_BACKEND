@@ -15,9 +15,42 @@ import {
   Td,
   IconButton,
   Select,
-  Textarea,
 } from '@chakra-ui/react';
+import ReactQuill from 'react-quill';
+import './quill.css';
+
+const quillModules = {
+  toolbar: {
+    container: [
+      [{ 'header': [1, 2, 3, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      ['link', 'image'],
+      ['clean']
+    ],
+    handlers: {
+      image: function () {
+        const input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.setAttribute('accept', 'image/*');
+        input.click();
+        input.onchange = async () => {
+          const file = input.files[0];
+          const formData = new FormData();
+          formData.append('image', file);
+          const res = await fetch('/api/upload', { method: 'POST', body: formData });
+          const data = await res.json();
+          const quill = this.quill;
+          const range = quill.getSelection();
+          quill.insertEmbed(range.index, 'image', data.url);
+        };
+      }
+    }
+  }
+};
 import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
+
+// All imports are now at the top as required by eslint import/first rule
 
 const PostsManager = ({ posts, onChange }) => {
   const [formData, setFormData] = useState({
@@ -84,10 +117,11 @@ const PostsManager = ({ posts, onChange }) => {
               
               <FormControl isRequired>
                 <FormLabel>Content</FormLabel>
-                <Textarea
+                <ReactQuill
                   value={formData.content}
-                  onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                  minHeight="200px"
+                  onChange={value => setFormData({ ...formData, content: value })}
+                  style={{ minHeight: '200px', background: 'white' }}
+                  modules={quillModules}
                 />
               </FormControl>
 

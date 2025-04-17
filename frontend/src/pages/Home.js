@@ -38,6 +38,14 @@ import 'slick-carousel/slick/slick-theme.css';
 
 const MotionBox = motion(Box);
 
+function stripHtml(html) {
+  if (!html) return '';
+  let text = html.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+  const tmp = document.createElement('DIV');
+  tmp.innerHTML = text;
+  return (tmp.textContent || tmp.innerText || '').replace(/\s+/g, ' ').trim();
+}
+
 const Home = () => {
   const dispatch = useDispatch();
   const { skills } = useSelector((state) => state.skills || { skills: [] });
@@ -416,7 +424,7 @@ const Home = () => {
                         {post.title}
                       </Heading>
                       <Text color="whiteAlpha.900" mb={4} fontSize="md" noOfLines={2}>
-                        {post.excerpt || post.content?.substring(0, 90) + "..."}
+                        {post.excerpt ? stripHtml(post.excerpt).substring(0, 90) : (post.content ? stripHtml(post.content).substring(0, 90) + '...' : '')}
                       </Text>
                     </Box>
                     <Box mt={2}>

@@ -1,4 +1,36 @@
 import { useState } from "react";
+import ReactQuill from 'react-quill';
+import '../components/dashboard/quill.css';
+
+const quillModules = {
+  toolbar: {
+    container: [
+      [{ 'header': [1, 2, 3, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      ['link', 'image'],
+      ['clean']
+    ],
+    handlers: {
+      image: function () {
+        const input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.setAttribute('accept', 'image/*');
+        input.click();
+        input.onchange = async () => {
+          const file = input.files[0];
+          const formData = new FormData();
+          formData.append('image', file);
+          const res = await fetch('/api/upload', { method: 'POST', body: formData });
+          const data = await res.json();
+          const quill = this.quill;
+          const range = quill.getSelection();
+          quill.insertEmbed(range.index, 'image', data.url);
+        };
+      }
+    }
+  }
+};
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { createPost } from "../features/posts/postsSlice";
@@ -13,8 +45,7 @@ import {
   VStack,
   useToast,
 } from "@chakra-ui/react";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+// All imports are now at the top as required by eslint import/first rule
 
 function CreatePost() {
   const [formData, setFormData] = useState({
@@ -42,13 +73,6 @@ function CreatePost() {
         [e.target.name]: e.target.value,
       }));
     }
-  };
-
-  const onEditorChange = (value) => {
-    setFormData((prevState) => ({
-      ...prevState,
-      content: value,
-    }));
   };
 
   const onSubmit = (e) => {
@@ -104,13 +128,12 @@ function CreatePost() {
 
             <FormControl isRequired>
               <FormLabel>Content</FormLabel>
-              <Box border="1px" borderColor="gray.200" rounded="md">
-                <ReactQuill
-                  value={content}
-                  onChange={onEditorChange}
-                  style={{ height: "300px", marginBottom: "50px" }}
-                />
-              </Box>
+              <ReactQuill
+                value={content}
+                onChange={(value) => setFormData((prev) => ({ ...prev, content: value }))}
+                style={{ minHeight: '200px', background: 'white' }}
+                modules={quillModules}
+              />
             </FormControl>
 
             <FormControl isRequired>

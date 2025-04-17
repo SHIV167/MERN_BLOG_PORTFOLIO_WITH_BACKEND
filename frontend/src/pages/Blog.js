@@ -15,6 +15,16 @@ import {
   Button,
 } from "@chakra-ui/react";
 
+function stripHtml(html) {
+  if (!html) return '';
+  // Remove all HTML tags
+  let text = html.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+  // Decode HTML entities
+  const tmp = document.createElement('DIV');
+  tmp.innerHTML = text;
+  return (tmp.textContent || tmp.innerText || '').replace(/\s+/g, ' ').trim();
+}
+
 function Blog() {
   const dispatch = useDispatch();
   const { posts = [], isLoading, isError, message } = useSelector((state) => state.posts || { posts: [] });
@@ -106,7 +116,7 @@ function Blog() {
                       {post.title}
                     </Heading>
                     <Text color="whiteAlpha.900" mb={4} fontSize="md" noOfLines={2}>
-                      {post.excerpt || post.content?.substring(0, 90) + "..."}
+                      {post.excerpt ? stripHtml(post.excerpt).substring(0, 90) : (post.content ? stripHtml(post.content).substring(0, 90) + '...' : '')}
                     </Text>
                   </Box>
                   <Box mt={2}>

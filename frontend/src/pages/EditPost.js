@@ -13,7 +13,37 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+import '../components/dashboard/quill.css';
+
+const quillModules = {
+  toolbar: {
+    container: [
+      [{ 'header': [1, 2, 3, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      ['link', 'image'],
+      ['clean']
+    ],
+    handlers: {
+      image: function () {
+        const input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.setAttribute('accept', 'image/*');
+        input.click();
+        input.onchange = async () => {
+          const file = input.files[0];
+          const formData = new FormData();
+          formData.append('image', file);
+          const res = await fetch('/api/upload', { method: 'POST', body: formData });
+          const data = await res.json();
+          const quill = this.quill;
+          const range = quill.getSelection();
+          quill.insertEmbed(range.index, 'image', data.url);
+        };
+      }
+    }
+  }
+};
 
 function EditPost() {
   const { id } = useParams();
@@ -61,10 +91,10 @@ function EditPost() {
     }
   };
 
-  const handleEditorChange = (content) => {
+  const handleEditorChange = (value) => {
     setFormData((prev) => ({
       ...prev,
-      content,
+      content: value,
     }));
   };
 
@@ -130,13 +160,12 @@ function EditPost() {
 
           <FormControl isRequired>
             <FormLabel>Content</FormLabel>
-            <Box border="1px" borderColor="gray.200" rounded="md">
-              <ReactQuill
-                value={formData.content}
-                onChange={handleEditorChange}
-                style={{ height: "300px", marginBottom: "50px" }}
-              />
-            </Box>
+            <ReactQuill
+              value={formData.content}
+              onChange={handleEditorChange}
+              style={{ minHeight: '200px', background: 'white' }}
+              modules={quillModules}
+            />
           </FormControl>
 
           <FormControl isRequired>
