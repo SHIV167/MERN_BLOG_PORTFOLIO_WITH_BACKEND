@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ChakraProvider, Box } from "@chakra-ui/react";
+import GlobalFloatButtons from "./components/GlobalFloatButtons";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
@@ -22,6 +23,7 @@ import AdminRoute from "./components/AdminRoute";
 function App() {
   return (
     <ChakraProvider>
+      <GlobalFloatButtons />
       <Router>
         <Box minH="100vh" display="flex" flexDirection="column">
           <Header />

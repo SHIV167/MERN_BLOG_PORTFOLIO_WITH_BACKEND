@@ -220,186 +220,261 @@ const Home = () => {
       </MotionBox>
 
       {/* Skills Section */}
-      <Box bg={sectionBg} py={20}>
+      <Box bg="white" py={16}>
         <Container maxW="container.xl">
-          <Heading as="h2" size="xl" mb={12} textAlign="center">
-            My Skills
+          <Heading as="h2" size="xl" mb={2} textAlign="center" color="#231942" fontWeight={900} letterSpacing={-1}>
+            SKILLS
           </Heading>
-          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8} mb={6}>
+          <Text color="gray.500" mb={10} textAlign="center" fontSize="lg">
+            My technical expertise and proficiency
+          </Text>
+          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
             {Object.entries(groupedSkills).map(([category, skills]) => (
-              <SkillCard key={category} title={category} skills={skills} />
+              <Box
+                key={category}
+                bg="white"
+                borderRadius="xl"
+                boxShadow="md"
+                borderWidth="1px"
+                borderColor="gray.200"
+                overflow="hidden"
+                p={6}
+                minH="220px"
+              >
+                <Heading fontSize="lg" color="#231942" fontWeight={700} mb={3}>
+                  {category}
+                </Heading>
+                <VStack align="start" spacing={4} width="100%">
+                  {skills.map((skill) => (
+                    <Box key={skill._id} width="100%">
+                      <HStack justify="space-between" mb={1}>
+                        <Text fontWeight={600} color="#231942">{skill.name}</Text>
+                        <Text fontWeight={600} color="purple.500">{skill.proficiency}%</Text>
+                      </HStack>
+                      <Progress
+                        value={skill.proficiency}
+                        colorScheme="purple"
+                        size="sm"
+                        rounded="full"
+                        bg="purple.50"
+                      />
+                    </Box>
+                  ))}
+                </VStack>
+              </Box>
             ))}
           </SimpleGrid>
         </Container>
       </Box>
 
-      {/* Projects Section */}
-      <Box bg={useColorModeValue("gray.50", "gray.900")} py={20}>
+      {/* Projects (Brands) Section */}
+      <Box bg="white" py={16}>
         <Container maxW="container.xl">
-          <Heading as="h2" size="xl" mb={12} textAlign="center">
-            Featured Projects
+          <Heading as="h2" size="xl" mb={2} textAlign="center" color="#231942" fontWeight={900} letterSpacing={-1}>
+            PROJECTS (BRANDS)
           </Heading>
-          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8} mb={6}>
+          <Text color="gray.500" mb={10} textAlign="center" fontSize="lg">
+            A selection of my recent work and professional collaborations
+          </Text>
+          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
             {projects?.slice(0, 3).map((project) => (
-              <ProjectCard
+              <Box
                 key={project._id}
-                title={project.title}
-                description={project.description}
-                image={project.image}
-                tags={project.tags}
-                demoLink={project.demoLink}
-                githubLink={project.githubLink}
-              />
+                bg="white"
+                borderRadius="xl"
+                boxShadow="md"
+                borderWidth="1px"
+                borderColor="gray.200"
+                overflow="hidden"
+                display="flex"
+                flexDirection="column"
+                minH="360px"
+              >
+                <Image
+                  src={project.image || "/project-placeholder.jpg"}
+                  alt={project.title}
+                  h={"180px"}
+                  w="100%"
+                  objectFit="cover"
+                />
+                <Box p={6} flex={1} display="flex" flexDirection="column" justifyContent="space-between">
+                  <Box>
+                    <Heading fontSize="lg" color="#231942" fontWeight={700} mb={1}>
+                      {project.title}
+                    </Heading>
+                    <Text color="gray.600" fontSize="md" mb={3}>{project.description}</Text>
+                    <Stack direction="row" spacing={2} mb={3}>
+                      {(project.tags || []).map((tag) => (
+                        <Tag key={tag} colorScheme="gray" fontWeight="bold">{tag}</Tag>
+                      ))}
+                    </Stack>
+                  </Box>
+                  <Button
+                    as={Link}
+                    to={project.demoLink || "#"}
+                    colorScheme="gray"
+                    variant="outline"
+                    leftIcon={<FaExternalLinkAlt />}
+                    fontWeight={700}
+                    size="sm"
+                    mt={2}
+                    alignSelf="flex-start"
+                  >
+                    View Project
+                  </Button>
+                </Box>
+              </Box>
             ))}
           </SimpleGrid>
-          <Box textAlign="center" mt={8}>
-            <Button
-              as={Link}
-              to="/projects"
-              size="lg"
-              colorScheme={buttonColorScheme}
-            >
-              View All Projects
-            </Button>
-          </Box>
         </Container>
       </Box>
 
-      {/* Blog Posts Section */}
-      <Box bg={sectionBg} py={20} mt={16}>
+      {/* My YouTube Videos Section */}
+      <Box bgGradient="linear(to-br, #4317b7 0%, #7f53ac 100%)" py={16}>
         <Container maxW="container.xl">
-          <Heading as="h2" size="xl" mb={12} textAlign="center">
-            Latest Blog Posts
+          <Heading as="h2" size="xl" mb={2} textAlign="center" color="white" fontWeight={900} letterSpacing={-1}>
+            MY YOUTUBE VIDEOS
           </Heading>
-          {posts && posts.length > 3 ? (
-            <SliderSection
-              items={posts}
-              slidesToShow={3}
-              renderItem={(post) => (
-                <Box
-                  key={post._id}
-                  bg={postBg}
-                  p={6}
-                  rounded="lg"
-                  boxShadow="lg"
-                >
-                  <VStack align="start" spacing={4}>
-                    <Image
-                      src={post.image || "/post-placeholder.jpg"}
-                      alt={post.title}
-                      h={180}
-                      w="full"
-                      objectFit="cover"
-                      rounded="md"
-                    />
-                    <Heading size="md">{post.title}</Heading>
-                    <Text color={postTextColor}>{post.excerpt || post.content?.slice(0, 100) + "..."}</Text>
-                    <Button
-                      as={Link}
-                      to={`/blog/${post.slug || post._id}`}
-                      variant="link"
-                      colorScheme="blue"
-                    >
-                      Read More →
-                    </Button>
-                  </VStack>
+          <Text color="whiteAlpha.800" mb={10} textAlign="center" fontSize="lg">
+            Check out my latest tutorials and tech discussions
+          </Text>
+          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
+            {videos?.slice(0, 3).map((video) => (
+              <Box
+                key={video._id}
+                bg="whiteAlpha.200"
+                borderRadius="xl"
+                boxShadow="lg"
+                overflow="hidden"
+                display="flex"
+                flexDirection="column"
+                minH="320px"
+              >
+                <AspectRatio ratio={16 / 9}>
+                  <iframe
+                    title={video.title}
+                    src={`https://www.youtube.com/embed/${video.videoId}`}
+                    allowFullScreen
+                  />
+                </AspectRatio>
+                <Box p={6} flex={1} display="flex" flexDirection="column" justifyContent="space-between">
+                  <Box>
+                    <Heading fontSize="lg" color="white" fontWeight={700} mb={1}>
+                      {video.title}
+                    </Heading>
+                    <Text color="whiteAlpha.900" fontSize="md" mb={3}>{video.description}</Text>
+                    <Tag colorScheme="purple" fontWeight="bold">{video.category}</Tag>
+                  </Box>
                 </Box>
-              )}
-            />
-          ) : (
-            <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8} mb={6}>
-              {posts?.slice(0, 3).map((post) => (
-                <Box
-                  key={post._id}
-                  bg={postBg}
-                  p={6}
-                  rounded="lg"
-                  boxShadow="lg"
-                >
-                  <VStack align="start" spacing={4}>
-                    <Image
-                      src={post.image || "/post-placeholder.jpg"}
-                      alt={post.title}
-                      h={180}
-                      w="full"
-                      objectFit="cover"
-                      rounded="md"
-                    />
-                    <Heading size="md">{post.title}</Heading>
-                    <Text color={postTextColor}>{post.excerpt || post.content?.slice(0, 100) + "..."}</Text>
-                    <Button
-                      as={Link}
-                      to={`/blog/${post.slug || post._id}`}
-                      variant="link"
-                      colorScheme="blue"
-                    >
-                      Read More →
-                    </Button>
-                  </VStack>
-                </Box>
-              ))}
-            </SimpleGrid>
-          )}
-          <Box textAlign="center" mt={8}>
-            <Button
-              as={Link}
-              to="/blog"
-              size="lg"
-              colorScheme={buttonColorScheme}
-            >
-              View All Posts
-            </Button>
+              </Box>
+            ))}
+          </SimpleGrid>
+          {/* Carousel dots (static for demo) */}
+          <Box display="flex" justifyContent="center" alignItems="center" mt={6} mb={2}>
+            <Box w={2} h={2} bg="white" borderRadius="full" mx={1} opacity={1}></Box>
+            <Box w={2} h={2} bg="whiteAlpha.700" borderRadius="full" mx={1} opacity={0.7}></Box>
+            <Box w={2} h={2} bg="whiteAlpha.700" borderRadius="full" mx={1} opacity={0.7}></Box>
           </Box>
-        </Container>
-      </Box>
-
-      {/* Videos Section */}
-      <Box bg={useColorModeValue("gray.50", "gray.900")} py={20} mt={16}>
-        <Container maxW="container.xl">
-          <Heading as="h2" size="xl" mb={12} textAlign="center">
-            Featured Videos
-          </Heading>
-          {videos && videos.length > 3 ? (
-            <SliderSection
-              items={videos}
-              slidesToShow={3}
-              renderItem={(video) => (
-                <VideoCard
-                  key={video._id}
-                  title={video.title}
-                  description={video.description}
-                  videoId={video.videoId}
-                  category={video.category}
-                />
-              )}
-            />
-          ) : (
-            <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8} mb={6}>
-              {videos?.slice(0, 3).map((video) => (
-                <VideoCard
-                  key={video._id}
-                  title={video.title}
-                  description={video.description}
-                  videoId={video.videoId}
-                  category={video.category}
-                />
-              ))}
-            </SimpleGrid>
-          )}
-          <Box textAlign="center" mt={8}>
+          <Box textAlign="center" mt={2}>
             <Button
               as={ChakraLink}
               href="https://youtube.com"
               isExternal
               size="lg"
-              colorScheme={buttonColorScheme}
+              colorScheme="whiteAlpha"
+              variant="outline"
+              fontWeight={700}
+              px={8}
               rightIcon={<FaYoutube />}
+              _hover={{ bg: 'whiteAlpha.300' }}
             >
-              Visit YouTube Channel
+              Visit My Channel
             </Button>
           </Box>
         </Container>
       </Box>
+
+      {/* BLOGS Section */}
+      <Box bg="white" py={16}>
+        <Container maxW="container.xl">
+          <Heading as="h2" size="xl" mb={10} textAlign="center" color="#231942" fontWeight={900} letterSpacing={-1}>
+            BLOGS
+          </Heading>
+          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
+            {(posts || []).slice(0, 3).map((post, idx) => {
+              const gradients = [
+                'linear(to-br, #a18cd1 0%, #fbc2eb 100%)', // purple-pink
+                'linear(to-br, #f7971e 0%, #ffd200 100%)', // orange-yellow
+                'linear(to-br, #43cea2 0%, #185a9d 100%)', // teal-blue
+              ];
+              return (
+                <Box
+                  key={post._id}
+                  bgGradient={gradients[idx % gradients.length]}
+                  borderRadius="xl"
+                  boxShadow="xl"
+                  overflow="hidden"
+                  display="flex"
+                  flexDirection="column"
+                  minH="320px"
+                  transition="transform 0.18s, box-shadow 0.18s"
+                  _hover={{
+                    transform: 'translateY(-6px) scale(1.025)',
+                    boxShadow: '2xl',
+                  }}
+                >
+                  <Box h="140px" w="100%" overflow="hidden">
+                    <Image
+                      src={post.image ? `${process.env.REACT_APP_BACKEND_URL}${post.image}` : "/post-placeholder.jpg"}
+                      alt={post.title}
+                      w="100%"
+                      h="100%"
+                      objectFit="cover"
+                    />
+                  </Box>
+                  <Box flex={1} display="flex" flexDirection="column" justifyContent="space-between" p={6} pt={4}>
+                    <Box>
+                      <Heading fontSize="lg" color="white" fontWeight={700} mb={2}>
+                        {post.title}
+                      </Heading>
+                      <Text color="whiteAlpha.900" mb={4} fontSize="md" noOfLines={2}>
+                        {post.excerpt || post.content?.substring(0, 90) + "..."}
+                      </Text>
+                    </Box>
+                    <Box mt={2}>
+                      <HStack spacing={6} color="whiteAlpha.800" fontSize="sm" mb={3}>
+                        <HStack spacing={2}>
+                          <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-2-2"/></svg>
+                          <Text>{new Date(post.createdAt).toLocaleDateString()}</Text>
+                        </HStack>
+                        <HStack spacing={2}>
+                          <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
+                          <Text>5 min read</Text>
+                        </HStack>
+                      </HStack>
+                      <Button
+                        as={Link}
+                        to={`/blog/${post.slug}`}
+                        colorScheme="whiteAlpha"
+                        variant="outline"
+                        borderRadius="md"
+                        fontWeight={700}
+                        px={6}
+                        py={2}
+                        _hover={{ bg: 'whiteAlpha.200', borderColor: 'whiteAlpha.800' }}
+                      >
+                        Read More
+                      </Button>
+                    </Box>
+                  </Box>
+                </Box>
+              );
+            })}
+          </SimpleGrid>
+        </Container>
+      </Box>
+
+
     </Box>
   );
 };

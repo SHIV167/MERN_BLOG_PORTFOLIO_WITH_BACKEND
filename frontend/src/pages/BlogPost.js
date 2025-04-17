@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { getPost } from "../features/posts/postsSlice";
 import {
@@ -9,21 +9,37 @@ import {
   Text,
   Image,
   Stack,
+  SimpleGrid,
+  HStack,
+  VStack,
+  Tag,
+  IconButton,
+  Button,
   useColorModeValue,
+  Link as ChakraLink,
 } from "@chakra-ui/react";
+import { FaArrowLeft, FaCalendarAlt, FaClock, FaFacebook, FaTwitter, FaLinkedin, FaLink } from "react-icons/fa";
 
 function BlogPost() {
   const { slug } = useParams();
   const dispatch = useDispatch();
-  const { post, isLoading } = useSelector((state) => state.posts);
-  const bgColor = useColorModeValue("white", "gray.900");
-  const headingColor = useColorModeValue("gray.700", "white");
+  const navigate = useNavigate();
+  const { post, isLoading, posts } = useSelector((state) => state.posts);
+  const bgColor = "white";
+  const headingColor = "#231942";
+  const purpleBg = "#cbb3f7";
+  const cardShadow = "0 4px 24px rgba(44, 40, 81, 0.11)";
 
   useEffect(() => {
     if (slug) {
       dispatch(getPost(slug));
     }
   }, [dispatch, slug]);
+
+  // Placeholder for related/more articles
+  const moreArticles = (posts || [])
+    .filter((p) => p.slug !== slug)
+    .slice(0, 2);
 
   if (isLoading || !post) {
     return (
@@ -34,44 +50,157 @@ function BlogPost() {
   }
 
   return (
-    <Container maxW={"7xl"} py={12}>
-      <Box bg={bgColor} boxShadow={"2xl"} rounded={"md"} p={6} overflow={"hidden"}>
-        {post.image && (
-          <Box h={"400px"} bg={"gray.100"} mt={-6} mx={-6} mb={6} pos={"relative"}>
-            <Image
-              src={`${process.env.REACT_APP_BACKEND_URL}${post.image}`}
-              layout={"fill"}
-              alt={post.title}
-              objectFit="cover"
-            />
-          </Box>
-        )}
-        <Stack>
-          <Text
-            color={"green.500"}
-            textTransform={"uppercase"}
-            fontWeight={800}
-            fontSize={"sm"}
-            letterSpacing={1.1}>
-            {post.category}
-          </Text>
-          <Heading color={headingColor} fontSize={"4xl"} fontFamily={"body"}>
+    <Box minH="100vh" bg={purpleBg}
+      pb={{ base: 8, md: 16 }}
+      position="relative"
+    >
+      {/* Header Banner */}
+      <Box
+        w="100%"
+        h={{ base: "220px", md: "300px" }}
+        position="relative"
+        overflow="hidden"
+        borderBottomRadius={{ base: "2xl", md: "3xl" }}
+        mb={{ base: 0, md: 0 }}
+        zIndex={1}
+      >
+        <Image
+          src={post.image ? `${process.env.REACT_APP_BACKEND_URL}${post.image}` : "/post-placeholder.jpg"}
+          alt="Banner"
+          w="100%"
+          h="100%"
+          objectFit="cover"
+          position="absolute"
+          top={0}
+          left={0}
+        />
+        <Box
+          position="absolute"
+          top={0}
+          left={0}
+          w="100%"
+          h="100%"
+          bgGradient="linear(to-b, rgba(30,25,60,0.7), rgba(30,25,60,0.3))"
+        />
+        {/* Back to Blog Button on Banner */}
+        <Button
+          leftIcon={<FaArrowLeft />} 
+          variant="ghost"
+          pos="absolute"
+          top={{ base: 3, md: 6 }}
+          left={{ base: 3, md: 8 }}
+          onClick={() => navigate(-1)}
+          fontWeight="bold"
+          color="gray.100"
+          bg="rgba(44,40,81,0.5)"
+          _hover={{ bg: 'rgba(44,40,81,0.8)' }}
+          zIndex={3}
+        >
+          Back to Blog
+        </Button>
+      </Box>
+
+      <Container maxW="4xl" centerContent position="relative" zIndex={2}>
+        <Box
+          w="100%"
+          bg={bgColor}
+          boxShadow={cardShadow}
+          rounded="xl"
+          p={{ base: 6, md: 10 }}
+          mb={12}
+          pos="relative"
+          mt={{ base: -20, md: -32 }}
+        >
+          {post.image && (
+            <Box h="180px" w="100%" rounded="lg" overflow="hidden" mb={6}>
+              <Image
+                src={`${process.env.REACT_APP_BACKEND_URL}${post.image}`}
+                alt={post.title}
+                w="100%"
+                h="100%"
+                objectFit="cover"
+              />
+            </Box>
+          )}
+
+          <Heading color={headingColor} fontSize={{ base: "2xl", md: "2.2rem" }} mb={3}>
             {post.title}
           </Heading>
-          <Stack direction={"row"} spacing={4} align={"center"} mb={4}>
-            <Stack direction={"column"} spacing={0} fontSize={"sm"}>
-              <Text fontWeight={600}>{post.author?.name}</Text>
-              <Text color={"gray.500"}>
-                {new Date(post.createdAt).toLocaleDateString()}
-              </Text>
-            </Stack>
-          </Stack>
-          <Text color={"gray.500"} whiteSpace="pre-wrap">
+
+          <HStack spacing={6} color="gray.500" fontSize="md" mb={2}>
+            <HStack spacing={2}>
+              <FaCalendarAlt />
+              <Text>{new Date(post.createdAt).toLocaleDateString()}</Text>
+            </HStack>
+            <HStack spacing={2}>
+              <FaClock />
+              <Text>6 min read</Text>
+            </HStack>
+          </HStack>
+
+          <Text color="gray.600" fontSize="lg" mb={4}>
+            {post.excerpt || post.content?.substring(0, 120) + "..."}
+          </Text>
+
+          <HStack spacing={3} mb={6}>
+            <Text color="gray.500" fontWeight="bold">Share:</Text>
+            <ChakraLink href="#" isExternal><FaFacebook /></ChakraLink>
+            <ChakraLink href="#" isExternal><FaTwitter /></ChakraLink>
+            <ChakraLink href="#" isExternal><FaLinkedin /></ChakraLink>
+            <ChakraLink href="#" isExternal><FaLink /></ChakraLink>
+          </HStack>
+
+          <Text color="gray.700" fontSize="md" mb={0}>
             {post.content}
           </Text>
-        </Stack>
-      </Box>
-    </Container>
+        </Box>
+
+        {/* More Articles Section */}
+        <Box w="100%" mt={6}>
+          <Heading as="h3" size="lg" mb={6} color={headingColor}>
+            More Articles
+          </Heading>
+          <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
+            {(moreArticles.length ? moreArticles : [post, post]).map((article, idx) => (
+              <Box
+                key={idx}
+                bg={bgColor}
+                boxShadow={cardShadow}
+                rounded="xl"
+                p={5}
+                display="flex"
+                flexDirection="column"
+                justifyContent="space-between"
+              >
+                <Box mb={4}>
+                  <Image
+                    src={article.image ? `${process.env.REACT_APP_BACKEND_URL}${article.image}` : "/post-placeholder.jpg"}
+                    alt={article.title}
+                    w="100%"
+                    h="120px"
+                    objectFit="cover"
+                    rounded="md"
+                    mb={3}
+                  />
+                  <Heading size="md" mb={2} color={headingColor}>
+                    {article.title}
+                  </Heading>
+                  <Text color="gray.600" mb={2}>
+                    {article.excerpt || article.content?.substring(0, 80) + "..."}
+                  </Text>
+                </Box>
+                <HStack color="gray.500" fontSize="sm">
+                  <FaCalendarAlt />
+                  <Text>{new Date(article.createdAt).toLocaleDateString()}</Text>
+                  <FaClock />
+                  <Text>5 min read</Text>
+                </HStack>
+              </Box>
+            ))}
+          </SimpleGrid>
+        </Box>
+      </Container>
+    </Box>
   );
 }
 

@@ -12,6 +12,7 @@ import {
   SimpleGrid,
   Image,
   Stack,
+  HStack,
   useColorModeValue,
   Button,
 } from "@chakra-ui/react";
@@ -42,83 +43,87 @@ function Blog() {
     );
   }
 
+  const gradients = [
+    'linear(to-br, #a18cd1 0%, #fbc2eb 100%)', // purple-pink
+    'linear(to-br, #f7971e 0%, #ffd200 100%)', // orange-yellow
+    'linear(to-br, #43cea2 0%, #185a9d 100%)', // teal-blue
+  ];
   return (
-    <Container maxW={"7xl"} py={12}>
-      <Heading as="h1" mb={8}>
-        Blog Posts
-      </Heading>
-      <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={10}>
-        {posts.map((post) => (
-          <Box
-            key={post._id}
-            maxW={"445px"}
-            w={"full"}
-            bg={bgColor}
-            boxShadow={"2xl"}
-            rounded={"md"}
-            p={6}
-            overflow={"hidden"}
-          >
-            {post.image && (
-              <Box
-                h={"210px"}
-                bg={"gray.100"}
-                mt={-6}
-                mx={-6}
-                mb={6}
-                pos={"relative"}
-              >
+    <Box minH="100vh" bg="#cbb3f7" py={0}>
+      {/* Header Row */}
+      <Box px={{ base: 4, md: 12 }} pt={8} pb={4}>
+        <Heading as="h1" fontSize={{ base: "2xl", md: "2.5rem" }} color="#231942" fontWeight={900} letterSpacing={-1}>
+          All Blog Posts
+        </Heading>
+      </Box>
+
+      <Container maxW={"7xl"} px={{ base: 2, md: 8 }} pb={12}>
+        <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
+          {posts.map((post, idx) => (
+            <Box
+              key={post._id}
+              bgGradient={gradients[idx % gradients.length]}
+              rounded="2xl"
+              boxShadow="xl"
+              overflow="hidden"
+              display="flex"
+              flexDirection="column"
+              minH="420px"
+              transition="transform 0.18s, box-shadow 0.18s"
+              _hover={{
+                transform: 'translateY(-6px) scale(1.025)',
+                boxShadow: '2xl',
+              }}
+            >
+              <Box h="180px" w="100%" overflow="hidden">
                 <Image
-                  src={`${process.env.REACT_APP_BACKEND_URL}${post.image}`}
+                  src={post.image ? `${process.env.REACT_APP_BACKEND_URL}${post.image}` : "/post-placeholder.jpg"}
                   alt={post.title}
                   w="100%"
                   h="100%"
                   objectFit="cover"
                 />
               </Box>
-            )}
-            <Stack>
-              <Text
-                color={"green.500"}
-                textTransform={"uppercase"}
-                fontWeight={800}
-                fontSize={"sm"}
-                letterSpacing={1.1}
-              >
-                {post.category}
-              </Text>
-              <Heading
-                color={headingColor}
-                fontSize={"2xl"}
-                fontFamily={"body"}
-              >
-                {post.title}
-              </Heading>
-              <Text color={"gray.500"}>
-                {post.content.substring(0, 150)}...
-              </Text>
-            </Stack>
-            <Stack mt={6} direction={"row"} spacing={4} align={"center"}>
-              <Stack direction={"column"} spacing={0} fontSize={"sm"}>
-                <Text fontWeight={600}>{post.author.name}</Text>
-                <Text color={"gray.500"}>
-                  {new Date(post.createdAt).toLocaleDateString()}
-                </Text>
-              </Stack>
-            </Stack>
-            <Button
-              as={RouterLink}
-              to={`/blog/${post.slug}`}
-              mt={4}
-              colorScheme="blue"
-              variant="outline"
-            >
-              Read More
-            </Button>
-          </Box>
-        ))}
-      </SimpleGrid>
-    </Container>
+              <Box flex={1} display="flex" flexDirection="column" justifyContent="space-between" p={6} pt={4}>
+                <Box>
+                  <Heading fontSize="xl" color="white" fontWeight={700} mb={2}>
+                    {post.title}
+                  </Heading>
+                  <Text color="whiteAlpha.900" mb={4} fontSize="md" noOfLines={2}>
+                    {post.excerpt || post.content?.substring(0, 90) + "..."}
+                  </Text>
+                </Box>
+                <Box mt={2}>
+                  <HStack spacing={6} color="whiteAlpha.800" fontSize="sm" mb={3}>
+                    <HStack spacing={2}>
+                      <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-2-2"/></svg>
+                      <Text>{new Date(post.createdAt).toLocaleDateString()}</Text>
+                    </HStack>
+                    <HStack spacing={2}>
+                      <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
+                      <Text>5 min read</Text>
+                    </HStack>
+                  </HStack>
+                  <Button
+                    as={RouterLink}
+                    to={`/blog/${post.slug}`}
+                    colorScheme="whiteAlpha"
+                    variant="outline"
+                    borderRadius="md"
+                    fontWeight={700}
+                    px={6}
+                    py={2}
+                    _hover={{ bg: 'whiteAlpha.200', borderColor: 'whiteAlpha.800' }}
+                  >
+                    Read More
+                  </Button>
+                </Box>
+              </Box>
+            </Box>
+          ))}
+        </SimpleGrid>
+      </Container>
+    </Box>
   );
 }
 
