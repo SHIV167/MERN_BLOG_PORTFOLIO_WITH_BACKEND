@@ -1,4 +1,5 @@
 import React from "react";
+
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getPosts } from "../features/posts/postsSlice";
@@ -56,7 +57,8 @@ function Blog() {
             boxShadow={"2xl"}
             rounded={"md"}
             p={6}
-            overflow={"hidden"}>
+            overflow={"hidden"}
+          >
             {post.image && (
               <Box
                 h={"210px"}
@@ -64,7 +66,8 @@ function Blog() {
                 mt={-6}
                 mx={-6}
                 mb={6}
-                pos={"relative"}>
+                pos={"relative"}
+              >
                 <Image
                   src={`${process.env.REACT_APP_BACKEND_URL}${post.image}`}
                   alt={post.title}
@@ -80,13 +83,15 @@ function Blog() {
                 textTransform={"uppercase"}
                 fontWeight={800}
                 fontSize={"sm"}
-                letterSpacing={1.1}>
+                letterSpacing={1.1}
+              >
                 {post.category}
               </Text>
               <Heading
                 color={headingColor}
                 fontSize={"2xl"}
-                fontFamily={"body"}>
+                fontFamily={"body"}
+              >
                 {post.title}
               </Heading>
               <Text color={"gray.500"}>
@@ -106,7 +111,8 @@ function Blog() {
               to={`/blog/${post.slug}`}
               mt={4}
               colorScheme="blue"
-              variant="outline">
+              variant="outline"
+            >
               Read More
             </Button>
           </Box>

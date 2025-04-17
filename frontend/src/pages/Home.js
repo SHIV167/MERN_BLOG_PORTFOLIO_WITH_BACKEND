@@ -32,6 +32,9 @@ import { getPosts } from "../features/posts/postsSlice";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import Typewriter from "typewriter-effect";
+import SliderSection from '../components/SliderSection';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 const MotionBox = motion(Box);
 
@@ -222,7 +225,7 @@ const Home = () => {
           <Heading as="h2" size="xl" mb={12} textAlign="center">
             My Skills
           </Heading>
-          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
+          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8} mb={6}>
             {Object.entries(groupedSkills).map(([category, skills]) => (
               <SkillCard key={category} title={category} skills={skills} />
             ))}
@@ -236,7 +239,7 @@ const Home = () => {
           <Heading as="h2" size="xl" mb={12} textAlign="center">
             Featured Projects
           </Heading>
-          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
+          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8} mb={6}>
             {projects?.slice(0, 3).map((project) => (
               <ProjectCard
                 key={project._id}
@@ -263,44 +266,80 @@ const Home = () => {
       </Box>
 
       {/* Blog Posts Section */}
-      <Box bg={sectionBg} py={20}>
+      <Box bg={sectionBg} py={20} mt={16}>
         <Container maxW="container.xl">
           <Heading as="h2" size="xl" mb={12} textAlign="center">
             Latest Blog Posts
           </Heading>
-          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
-            {posts?.slice(0, 3).map((post) => (
-              <Box
-                key={post._id}
-                bg={postBg}
-                p={6}
-                rounded="lg"
-                boxShadow="lg"
-              >
-                <VStack align="start" spacing={4}>
-                  {/* Show blog post image if available, else fallback */}
-                  <Image
-                    src={post.image || "/post-placeholder.jpg"}
-                    alt={post.title}
-                    h={180}
-                    w="full"
-                    objectFit="cover"
-                    rounded="md"
-                  />
-                  <Heading size="md">{post.title}</Heading>
-                  <Text color={postTextColor}>{post.excerpt || post.content?.slice(0, 100) + "..."}</Text>
-                  <Button
-                    as={Link}
-                    to={`/blog/${post.slug || post._id}`}
-                    variant="link"
-                    colorScheme="blue"
-                  >
-                    Read More →
-                  </Button>
-                </VStack>
-              </Box>
-            ))}
-          </SimpleGrid>
+          {posts && posts.length > 3 ? (
+            <SliderSection
+              items={posts}
+              slidesToShow={3}
+              renderItem={(post) => (
+                <Box
+                  key={post._id}
+                  bg={postBg}
+                  p={6}
+                  rounded="lg"
+                  boxShadow="lg"
+                >
+                  <VStack align="start" spacing={4}>
+                    <Image
+                      src={post.image || "/post-placeholder.jpg"}
+                      alt={post.title}
+                      h={180}
+                      w="full"
+                      objectFit="cover"
+                      rounded="md"
+                    />
+                    <Heading size="md">{post.title}</Heading>
+                    <Text color={postTextColor}>{post.excerpt || post.content?.slice(0, 100) + "..."}</Text>
+                    <Button
+                      as={Link}
+                      to={`/blog/${post.slug || post._id}`}
+                      variant="link"
+                      colorScheme="blue"
+                    >
+                      Read More →
+                    </Button>
+                  </VStack>
+                </Box>
+              )}
+            />
+          ) : (
+            <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8} mb={6}>
+              {posts?.slice(0, 3).map((post) => (
+                <Box
+                  key={post._id}
+                  bg={postBg}
+                  p={6}
+                  rounded="lg"
+                  boxShadow="lg"
+                >
+                  <VStack align="start" spacing={4}>
+                    <Image
+                      src={post.image || "/post-placeholder.jpg"}
+                      alt={post.title}
+                      h={180}
+                      w="full"
+                      objectFit="cover"
+                      rounded="md"
+                    />
+                    <Heading size="md">{post.title}</Heading>
+                    <Text color={postTextColor}>{post.excerpt || post.content?.slice(0, 100) + "..."}</Text>
+                    <Button
+                      as={Link}
+                      to={`/blog/${post.slug || post._id}`}
+                      variant="link"
+                      colorScheme="blue"
+                    >
+                      Read More →
+                    </Button>
+                  </VStack>
+                </Box>
+              ))}
+            </SimpleGrid>
+          )}
           <Box textAlign="center" mt={8}>
             <Button
               as={Link}
@@ -314,24 +353,39 @@ const Home = () => {
         </Container>
       </Box>
 
-
       {/* Videos Section */}
-      <Box bg={useColorModeValue("gray.50", "gray.900")} py={20}>
+      <Box bg={useColorModeValue("gray.50", "gray.900")} py={20} mt={16}>
         <Container maxW="container.xl">
           <Heading as="h2" size="xl" mb={12} textAlign="center">
             Featured Videos
           </Heading>
-          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
-            {videos?.slice(0, 3).map((video) => (
-              <VideoCard
-                key={video._id}
-                title={video.title}
-                description={video.description}
-                videoId={video.videoId}
-                category={video.category}
-              />
-            ))}
-          </SimpleGrid>
+          {videos && videos.length > 3 ? (
+            <SliderSection
+              items={videos}
+              slidesToShow={3}
+              renderItem={(video) => (
+                <VideoCard
+                  key={video._id}
+                  title={video.title}
+                  description={video.description}
+                  videoId={video.videoId}
+                  category={video.category}
+                />
+              )}
+            />
+          ) : (
+            <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8} mb={6}>
+              {videos?.slice(0, 3).map((video) => (
+                <VideoCard
+                  key={video._id}
+                  title={video.title}
+                  description={video.description}
+                  videoId={video.videoId}
+                  category={video.category}
+                />
+              ))}
+            </SimpleGrid>
+          )}
           <Box textAlign="center" mt={8}>
             <Button
               as={ChakraLink}
@@ -392,9 +446,18 @@ const ProjectCard = ({
   return (
     <Box
       bg={useColorModeValue("white", "gray.800")}
-      rounded="lg"
+      rounded="2xl"
       boxShadow="lg"
+      borderWidth="1.5px"
+      borderColor={useColorModeValue('gray.200', 'gray.700')}
       overflow="hidden"
+      transition="all 0.2s"
+      _hover={{
+        boxShadow: '2xl',
+        transform: 'translateY(-8px) scale(1.04)',
+        borderColor: useColorModeValue('blue.400', 'blue.300'),
+      }}
+      mb={6}
     >
       <Image
         src={image || "/project-placeholder.jpg"}
@@ -403,7 +466,7 @@ const ProjectCard = ({
         w="full"
         objectFit="cover"
       />
-      <Box p={6}>
+      <Box p={6} pt={4}>
         <VStack align="start" spacing={3}>
           <Heading size="md">{title}</Heading>
           <Text color={useColorModeValue("gray.600", "gray.400")}>
@@ -453,9 +516,18 @@ const VideoCard = ({ title, description, videoId, category }) => {
   return (
     <Box
       bg={useColorModeValue("white", "gray.800")}
-      rounded="lg"
+      rounded="2xl"
       boxShadow="lg"
+      borderWidth="1.5px"
+      borderColor={useColorModeValue('gray.200', 'gray.700')}
       overflow="hidden"
+      transition="all 0.2s"
+      _hover={{
+        boxShadow: '2xl',
+        transform: 'translateY(-8px) scale(1.04)',
+        borderColor: useColorModeValue('blue.400', 'blue.300'),
+      }}
+      mb={6}
     >
       <AspectRatio ratio={16 / 9}>
         <iframe
@@ -464,7 +536,7 @@ const VideoCard = ({ title, description, videoId, category }) => {
           allowFullScreen
         />
       </AspectRatio>
-      <Box p={6}>
+      <Box p={6} pt={4}>
         <VStack align="start" spacing={3}>
           <Heading size="md">{title}</Heading>
           <Text color={useColorModeValue("gray.600", "gray.400")}>
