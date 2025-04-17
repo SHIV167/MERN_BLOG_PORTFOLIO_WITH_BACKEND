@@ -17,7 +17,7 @@ const GlobalFloatButtons = () => {
       {/* WhatsApp Floating Button (bottom left) */}
       <IconButton
         as="a"
-        href="https://wa.me/919876543210"
+        href="https://wa.me/919871785859"
         target="_blank"
         aria-label="WhatsApp Chat"
         icon={<FaWhatsapp size={24} />}

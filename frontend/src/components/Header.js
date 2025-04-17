@@ -71,23 +71,7 @@ export default function Header() {
         borderColor={useColorModeValue("gray.200", "gray.700")}
         boxShadow="sm">
         <Container maxW="6xl">
-          <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
-            <HStack spacing={3} alignItems={"center"}>
-              <Button onClick={toggleColorMode} variant="ghost" size="sm" _hover={{}} transition="none">
-                {colorMode === "light" ? <MoonIcon boxSize="2rem" /> : <SunIcon boxSize="2rem" />}
-              </Button>
-              {!user && (
-                <IconButton as={RouterLink} to="/login" aria-label="Login" icon={<FaUser />} bg="purple.500" color="white" borderRadius="full" boxSize="2.25rem" _hover={{}} transition="none" />
-              )}
-            </HStack>
-            <IconButton _hover={{ transform: 'scale(1.18)', color: 'purple.400', boxShadow: '0 4px 20px rgba(162, 89, 247, 0.18)' }} transition="all 0.2s" size="2rem"
-              size={"md"}
-              icon={<HamburgerIcon />}
-              aria-label={"Open Menu"}
-              display={{ md: "none" }}
-              onClick={onOpen}
-            />
-
+           <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
             <HStack spacing={8} alignItems={"center"}>
               <RouterLink to="/">
                 <Text
@@ -105,7 +89,6 @@ export default function Header() {
                 <RouterLink to="/">
                   <Button variant="ghost">Home</Button>
                 </RouterLink>
-                
                 <RouterLink to="/blog">
                   <Button variant="ghost">Blog</Button>
                 </RouterLink>
@@ -156,9 +139,10 @@ export default function Header() {
                     sx={{
                       position: 'relative',
                       zIndex: 2,
+                      background: 'transparent',
+                      color: 'purple.600',
+                      fontWeight: 'bold',
                       overflow: 'hidden',
-                      fontSize: 'md',
-                      transition: 'box-shadow 0.2s',
                     }}
                   >
                     <Box as="span" position="relative" zIndex={3}>
@@ -169,24 +153,61 @@ export default function Header() {
               </HStack>
             </HStack>
 
-            <Flex alignItems={"center"}>
-              <Stack direction={"row"} spacing={3} align="center">
-                {/* Social Icons */}
-                <HStack spacing={3} display={{ base: "none", md: "flex" }}>
-                  <IconButton as="a" href="https://wa.me/919876543210" aria-label="WhatsApp" icon={<FaWhatsapp />} bg="green.400" color="white" borderRadius="full" boxSize="2.25rem" _hover={{ bg: 'green.500' }} />
-                  <IconButton as="a" href="https://linkedin.com/in/yourusername" aria-label="LinkedIn" icon={<FaLinkedinIn />} bg="blue.700" color="white" borderRadius="full" boxSize="2.25rem" _hover={{ bg: 'blue.800' }} />
-                  <IconButton as="a" href="https://github.com/yourusername" aria-label="GitHub" icon={<FaGithub />} bg="gray.900" color="white" borderRadius="full" boxSize="2.25rem" _hover={{ bg: 'gray.700' }} />
-                  <IconButton as="a" href="https://twitter.com/yourusername" aria-label="Twitter" icon={<FaTwitter />} bg="#1DA1F2" color="white" borderRadius="full" boxSize="2.25rem" _hover={{ bg: '#1A8CD8' }} />
-                  <IconButton as="a" href="https://youtube.com/@yourchannel" aria-label="YouTube" icon={<FaYoutube />} bg="red.500" color="white" borderRadius="full" boxSize="2.25rem" _hover={{ bg: 'red.600' }} />
-                </HStack>
-              </Stack>
-            </Flex>
+            <HStack spacing={3} alignItems={"center"}>
+              <HStack spacing={3} display={{ base: "none", md: "flex" }}>
+                <IconButton as="a" href="https://wa.me/919876543210" aria-label="WhatsApp" icon={<FaWhatsapp />} bg="green.400" color="white" borderRadius="full" boxSize="2.25rem" _hover={{ bg: 'green.500' }} />
+                <IconButton as="a" href="https://linkedin.com/in/yourusername" aria-label="LinkedIn" icon={<FaLinkedinIn />} bg="blue.700" color="white" borderRadius="full" boxSize="2.25rem" _hover={{ bg: 'blue.800' }} />
+                <IconButton as="a" href="https://github.com/yourusername" aria-label="GitHub" icon={<FaGithub />} bg="gray.900" color="white" borderRadius="full" boxSize="2.25rem" _hover={{ bg: 'gray.700' }} />
+                <IconButton as="a" href="https://twitter.com/yourusername" aria-label="Twitter" icon={<FaTwitter />} bg="#1DA1F2" color="white" borderRadius="full" boxSize="2.25rem" _hover={{ bg: '#1A8CD8' }} />
+                <IconButton as="a" href="https://youtube.com/@yourchannel" aria-label="YouTube" icon={<FaYoutube />} bg="red.500" color="white" borderRadius="full" boxSize="2.25rem" _hover={{ bg: 'red.600' }} />
+              </HStack>
+              <Box minW="32px" />
+              <Button onClick={toggleColorMode} variant="ghost" size="sm" _hover={{}} transition="none">
+                {colorMode === "light" ? <MoonIcon boxSize="2rem" /> : <SunIcon boxSize="2rem" />}
+              </Button>
+              {user ? (
+                <Menu>
+                  <MenuButton as={Button} variant="ghost" px={3} py={2} borderRadius="md" fontWeight="bold">
+                    Hi, <span style={{ fontWeight: 700 }}>{user.name}</span>
+                  </MenuButton>
+                  <MenuList>
+                    {user.isAdmin && (
+                      <MenuItem as={RouterLink} to="/dashboard">Dashboard</MenuItem>
+                    )}
+                    <MenuItem onClick={onLogout}>Logout</MenuItem>
+                  </MenuList>
+                </Menu>
+              ) : (
+                <IconButton as={RouterLink} to="/login" aria-label="Login" icon={<FaUser />} bg="purple.500" color="white" borderRadius="full" boxSize="2.25rem" _hover={{}} transition="none" />
+              )}
+              <IconButton
+                size="md"
+                icon={<HamburgerIcon />}
+                aria-label="Open Menu"
+                display={{ base: "flex", md: "none" }}
+                onClick={onOpen}
+              />
+           </HStack>
           </Flex>
         </Container>
       </Box>
 
-      {/* Mobile menu */}
-      {isOpen && (
+    {/* Mobile menu */}
+    {isOpen && (
+      <Box
+        pos="fixed"
+        top="0"
+        left="0"
+        w="100%"
+        h="100vh"
+        zIndex={1000}
+        p={0}
+        style={{
+          backdropFilter: 'blur(8px)',
+          background: 'rgba(30, 0, 50, 0.3)',
+          transition: 'background 0.3s',
+        }}
+      >
         <Box
           pos="fixed"
           top="0"
@@ -215,100 +236,96 @@ export default function Header() {
             }}
             key="mobile-menu-panel"
           >
-          <Flex direction="column" h="full">
-            <Flex justify="space-between" align="center" mb={8}>
-              <Text
-                fontSize="xl"
-                fontWeight="bold"
-                bgGradient="linear(to-r, purple.500, purple.300)"
-                bgClip="text">
-                SHIV JHA
-              </Text>
-              <CloseButton onClick={onClose} />
-            </Flex>
-            <Stack spacing={4}>
-              <RouterLink to="/" onClick={onClose}>
-                <Button w="full" variant="ghost" justifyContent="flex-start">
-                  Home
-                </Button>
-              </RouterLink>
-              
-              <RouterLink to="/blog" onClick={onClose}>
-                <Button w="full" variant="ghost" justifyContent="flex-start">
-                  Blog
-                </Button>
-              </RouterLink>
-              <RouterLink to="/contact" onClick={onClose}>
-                <Button w="full" variant="ghost" justifyContent="flex-start">
-                  Contact
-                </Button>
-              </RouterLink>
-              <ChakraLink
-                href="https://shivjha.online/wp-content/uploads/2025/02/SHIV_KUMAR_JHA_DEC_2024_LATEST.pdf"
-                isExternal
-                _hover={{ textDecoration: 'none' }}
-                w="full"
-              >
-                <Button
+            <Flex direction="column" h="full">
+              <Flex justify="space-between" align="center" mb={8}>
+                <Text
+                  fontSize="xl"
+                  fontWeight="bold"
+                  bgGradient="linear(to-r, purple.500, purple.300)"
+                  bgClip="text">
+                  SHIV JHA
+                </Text>
+                <CloseButton onClick={onClose} />
+              </Flex>
+              <Stack spacing={4}>
+                <RouterLink to="/" onClick={onClose}>
+                  <Button w="full" variant="ghost" justifyContent="flex-start">
+                    Home
+                  </Button>
+                </RouterLink>
+                <RouterLink to="/blog" onClick={onClose}>
+                  <Button w="full" variant="ghost" justifyContent="flex-start">
+                    Blog
+                  </Button>
+                </RouterLink>
+                <RouterLink to="/contact" onClick={onClose}>
+                  <Button w="full" variant="ghost" justifyContent="flex-start">
+                    Contact
+                  </Button>
+                </RouterLink>
+                <ChakraLink
+                  href="https://shivjha.online/wp-content/uploads/2025/02/SHIV_KUMAR_JHA_DEC_2024_LATEST.pdf"
+                  isExternal
+                  _hover={{ textDecoration: 'none' }}
                   w="full"
-                  variant="ghost"
-                  px={6}
-                  position="relative"
-                  className="animated-resume-btn"
-                  justifyContent="flex-start"
-                  _before={{
-                    content: '""',
-                    position: 'absolute',
-                    top: '-3px',
-                    left: '-3px',
-                    right: '-3px',
-                    bottom: '-3px',
-                    borderRadius: 'md',
-                    zIndex: 0,
-                    background: 'linear-gradient(90deg, #a259f7, #f953c6, #43e97b 100%)',
-                    backgroundSize: '200% 200%',
-                    animation: 'gradient-border 2s linear infinite',
-                  }}
-                  _after={{
-                    content: '""',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    borderRadius: 'md',
-                    zIndex: 1,
-                    background: 'white',
-                  }}
-                  sx={{
-                    position: 'relative',
-                    zIndex: 2,
-                    background: 'transparent',
-                    color: 'purple.600',
-                    fontWeight: 'bold',
-                    overflow: 'hidden',
-                  }}
                 >
-                  <Box as="span" position="relative" zIndex={3}>
-                    Resume
-                  </Box>
-                </Button>
-              </ChakraLink>
-            </Stack>
-          </Flex>
-            </Box>
+                  <Button
+                    w="full"
+                    variant="ghost"
+                    px={6}
+                    position="relative"
+                    className="animated-resume-btn"
+                    justifyContent="flex-start"
+                    _before={{
+                      content: '""',
+                      position: 'absolute',
+                      top: '-3px',
+                      left: '-3px',
+                      right: '-3px',
+                      bottom: '-3px',
+                      borderRadius: 'md',
+                      zIndex: 0,
+                      background: 'linear-gradient(90deg, #a259f7, #f953c6, #43e97b 100%)',
+                      backgroundSize: '200% 200%',
+                      animation: 'gradient-border 2s linear infinite',
+                    }}
+                    _after={{
+                      content: '""',
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      borderRadius: 'md',
+                      zIndex: 1,
+                      background: 'white',
+                    }}
+                    sx={{
+                      position: 'relative',
+                      zIndex: 2,
+                      background: 'transparent',
+                    }}
+                  >
+                    <Box as="span" position="relative" zIndex={3}>
+                      Resume
+                    </Box>
+                  </Button>
+                </ChakraLink>
+              </Stack>
+              </Flex>
           </Box>
-        )}
-      <style>
-        {`
-        @keyframes slideInLeft {
-          from { transform: translateX(-100%); }
-          to { transform: translateX(0); }
-        }
-        `}
-      </style>
-      {/* Spacer to prevent content from going under fixed header */}
-      <Box h="64px" />
-    </>
+        </Box>
+      </Box>
+    )}
+    <Box h="64px" />
+    <style>
+      {`
+      @keyframes slideInLeft {
+        from { transform: translateX(-100%); }
+        to { transform: translateX(0); }
+      }
+      `}
+    </style>
+  </>
   );
 }
