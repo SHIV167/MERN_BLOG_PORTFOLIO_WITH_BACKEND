@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const colors = require("colors");
 const connectDB = require("./config/db");
 const path = require("path");
 
@@ -35,6 +36,13 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 const PORT = process.env.PORT || 5000;
 
+//home
+app.get("/",(req, res)=>{res.status(200).send({"success": true, "msg": "Node Server Started Successfully"
+})
+                       
+})
+
+//listen
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server Runnning ${PORT}`.bgGreen.white);
 });
